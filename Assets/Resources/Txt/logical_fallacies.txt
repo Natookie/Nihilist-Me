@@ -1,0 +1,19 @@
+# attack
+Ad Hominem
+Strawman
+False Dilemma
+
+# emotional
+Appeal to Emotion
+Bandwagon
+Slippery Slope
+
+# diversion
+Red Herring
+False Cause
+Appeal to Authority
+
+# logic_bend
+False Equivalence
+Circular Reasoning
+No True Scotsman
