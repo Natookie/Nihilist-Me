@@ -5,7 +5,7 @@ public static class DebateData{
     public static readonly Dictionary<string, string[]> FallacyPool = new Dictionary<string, string[]>{
         {"attack", new[]{ "Ad Hominem", "Strawman", "False Dilemma" }},
         {"logic_bend", new[]{ "False Equivalence", "Circular Reasoning", "No True Scotsman" }},
-        {"diversion", new[]{ "Red Herring", "Tu Quoque", "Appeal to Hypocrisy" }},
+        {"diversion", new[]{ "Red Herring", "Tu Quoque" }},
         {"emotional", new[]{ "Appeal to Emotion", "Bandwagon", "Overgeneralization" }},
         {"neutral", new[]{ "Slippery Slope", "False Balance", "Ambiguity" }}
     };

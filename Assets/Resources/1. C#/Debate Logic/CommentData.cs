@@ -11,8 +11,6 @@ public class CommentData : MonoBehaviour
     private float tick;
     private float downvoteChance;
 
-    private bool debugLog;
-
     public void SetData(int a, string type = "whatavercuh"){
         upCount = 0;
         downCount = 0;
@@ -22,7 +20,6 @@ public class CommentData : MonoBehaviour
         if(type == "AI") downvoteChance = (1 - downvoteChance);
 
         duration = Random.Range(10f, 25f);
-        debugLog = true;
     }
 
     void Update(){

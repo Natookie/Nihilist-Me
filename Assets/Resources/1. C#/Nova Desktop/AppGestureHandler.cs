@@ -18,12 +18,17 @@ public class AppGestureHandler : MonoBehaviour
     public UIBlock2D fullUtil;
     public UIBlock2D closeUtil;
 
+    [Header("TWEAKS")]
+    public bool canSplit;
+    public GameObject fullMode;
+    public GameObject splitMode;
+
     const float HIDDEN_Y = -1000f;
     const float DEFAULT_X = 0f;
 
     bool isDragging;
     bool isAnimating;
-    bool isFullscreen;
+    public bool isFullscreen;
 
     Vector3 preFullscreenPos;
     Length preFullscreenX;
@@ -58,6 +63,11 @@ public class AppGestureHandler : MonoBehaviour
         RegisterUtil(minimizeUtil);
         RegisterUtil(fullUtil);
         RegisterUtil(closeUtil);
+
+        if(canSplit){
+            if(fullMode != null) fullMode.SetActive(false);
+            if(splitMode != null) splitMode.SetActive(true);
+        }
     }
 
     void RegisterUtil(UIBlock2D block){
@@ -172,11 +182,21 @@ public class AppGestureHandler : MonoBehaviour
             Root.Size.X.Percent = .9f;
             Root.Size.Y.Percent = .9f;
 
+            if(canSplit){
+                if(splitMode != null) splitMode.SetActive(false);
+                if(fullMode != null) fullMode.SetActive(true);
+            }
+
             isFullscreen = true;
         }else{
             Root.Position.Value = preFullscreenPos;
             Root.Size.X = preFullscreenX;
             Root.Size.Y = preFullscreenY;
+
+            if(canSplit){
+                if(fullMode != null) fullMode.SetActive(false);
+                if(splitMode != null) splitMode.SetActive(true);
+            }
 
             isFullscreen = false;
         }

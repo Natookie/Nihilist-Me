@@ -11,7 +11,7 @@ public class CamFoll : MonoBehaviour
     public float maxXOffset = 2f;
     public float followSmooth = 8f;
 
-    [Header("Vertical / Depth")]
+    [Header("VERTICAL / DEPTH")]
     public float fixedY = 5f;
     public float fixedZ = -10f;
 
@@ -133,7 +133,7 @@ public class CamFoll : MonoBehaviour
         Vector3 endPos = new Vector3(
             monitorTarget.position.x,
             monitorTarget.position.y,
-            monitorTarget.position.z - 0.1f
+            monitorTarget.position.z - 1f
         );
 
         float startFOV = vcam.m_Lens.FieldOfView;
@@ -318,16 +318,13 @@ public class CamFoll : MonoBehaviour
 
     public void UpdatePostProcessingPriority(){
         if(!rezzitScreen || !roomVolume || !desktopVolume){
-            Debug.LogError("Volume");
             return;
         }
 
-        Debug.Log("1");
         if(rezzitScreen.activeSelf){
             roomVolume.priority = 0;
             desktopVolume.priority = 0;
             rezzitVolume.priority = 20;
-            Debug.Log("2");
             return;
         }
 
