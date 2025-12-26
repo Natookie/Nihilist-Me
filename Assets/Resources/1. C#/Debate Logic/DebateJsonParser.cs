@@ -126,7 +126,7 @@ public static class DebateJsonParser
                 return SanitizeJson(json);
             }
         }
-        catch(System.Exception e){ }
+        catch{ }
         
         return null;
     }

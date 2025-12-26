@@ -31,7 +31,7 @@ public class SleepingMat : MonoBehaviour, IInteractable
     public GameObject sleepScreen;
     public TextMeshProUGUI recapText;
 
-    private int dayCount = 1;
+    public int dayCount = 1;
     private int winCount;
     private bool isSleeping;
     [HideInInspector] public bool ending3;
