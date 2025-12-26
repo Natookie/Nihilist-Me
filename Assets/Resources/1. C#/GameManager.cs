@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
 
     [Header("REFERENCES")]
     public Transform desktopCanvas;
-    public PauseManager pauseManager;
+    public GameObject pauseMenu;
     public DesktopManager dm;
     public Volume pp;
 
@@ -58,9 +58,8 @@ public class GameManager : MonoBehaviour
     void HandlePause(){
         if(Input.GetKeyDown(KeyCode.Escape)){
             isPaused = !isPaused;
+            pauseMenu.SetActive(isPaused);
             Time.timeScale = isPaused ? 0f : 1f;
-            if(isPaused) pauseManager.OpenPauseMenu();
-            else pauseManager.ClosePauseMenu();
         }
     }
 
