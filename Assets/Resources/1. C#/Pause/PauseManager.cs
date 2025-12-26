@@ -418,6 +418,7 @@ public class PauseManager : MonoBehaviour
             pauseOptionSelection.ResetOption();
             pauseOptionSelection.targetSidePanel.ResetSidePanel();
         }
+        currentPauseOptionSelection = null;
     }
 
     private IEnumerator ShowAllOptionSelection(){
@@ -453,11 +454,14 @@ public class PauseManager : MonoBehaviour
             rt.anchoredPosition = endPos;
             yield return new WaitForSecondsRealtime(staggerDelay);
         }
-        // Set the first pause option selection as default
-        PauseOptionSelection_OnOptionPressed(this, new PauseOptionSelection.OnOptionPressedEventArgs
-        {
-            pauseOptionSelection = pauseOptionSelections[0]
-        });
+        // Set the first pause option selection as default, if the player have not click anything
+        if(currentPauseOptionSelection == null)
+        {    
+            PauseOptionSelection_OnOptionPressed(this, new PauseOptionSelection.OnOptionPressedEventArgs
+            {
+                pauseOptionSelection = pauseOptionSelections[0]
+            });
+        }
     }
 
     private void PauseOptionSelection_OnOptionPressed(object sender, PauseOptionSelection.OnOptionPressedEventArgs e)
