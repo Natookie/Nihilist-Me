@@ -52,6 +52,9 @@ public class AppGestureHandler : MonoBehaviour
         closedPos = new Vector3(DEFAULT_X, HIDDEN_Y, originalPos.z);
         lastMinimizedPos = originalPos;
 
+        preFullscreenX = Root.Size.X;
+        preFullscreenY = Root.Size.Y;
+
         Root.Position.Value = closedPos;
         Root.GetComponent<Interactable>().enabled = false;
         State = AppWindowState.Closed;

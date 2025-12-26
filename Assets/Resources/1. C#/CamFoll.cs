@@ -23,11 +23,8 @@ public class CamFoll : MonoBehaviour
 
     [Header("DESKTOP TRANSITION")]
     public Transform monitorTarget;
-    public CanvasGroup computerCanvas;
     public float zoomDuration = 1f;
     public float uiFadeDuration = 0.5f;
-    [Space(10)]
-    public bool isUsingNewDesktop;
 
     [Header("DESKTOP REFERENCES")]
     public GameObject desktopScreen;
@@ -58,14 +55,19 @@ public class CamFoll : MonoBehaviour
     bool _onMonitor;
     Coroutine _transitionRoutine;
 
+    int _activeFlickers = 0;
+    bool _flickerFinished = false;
+
+    public bool IsDesktopFXDone(){ return _flickerFinished; }
+    public bool IsDesktopReady{ get{ return _flickerFinished && !_isZooming && _onMonitor; } }
+
     void Start(){
         fixedY = transform.position.y;
         fixedZ = transform.position.z;
-        _targetFOV = worldCam.fieldOfView;
+        _targetFOV = vcam.m_Lens.FieldOfView;
 
-        if(computerCanvas == null || desktopScreen == null) return;
+        if(desktopScreen == null) return;
 
-        computerCanvas.alpha = 0f;
         desktopScreen.SetActive(false);
         if(desktopVisual != null){
             Color col = desktopActiveColor;
@@ -73,11 +75,12 @@ public class CamFoll : MonoBehaviour
             desktopVisual.Color = col;
         }
 
-        foreach(Transform child in desktopScreen.transform) child.gameObject.SetActive(false);
+        foreach(Transform child in desktopScreen.transform)
+            child.gameObject.SetActive(false);
     }
 
     void LateUpdate(){
-        if(_isZooming || (computerCanvas && computerCanvas.alpha == 1f)) return;
+        if(_isZooming) return;
         if(desktopScreen.activeSelf) return;
 
         HandleMouseX();
@@ -85,6 +88,7 @@ public class CamFoll : MonoBehaviour
         HandleZoom();
     }
 
+    #region CAMERA FOLLOW
     void HandleMouseX(){
         Vector3 mouseView = worldCam.ScreenToViewportPoint(Input.mousePosition);
         float centeredX = (mouseView.x - 0.5f) * 2f;
@@ -108,13 +112,16 @@ public class CamFoll : MonoBehaviour
 
     void HandleZoom(){
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if(Mathf.Abs(scroll) > 0.0001f) _targetFOV = Mathf.Clamp(_targetFOV - scroll * zoomSpeed, minFOV, maxFOV);
+        if(Mathf.Abs(scroll) > 0.0001f)
+            _targetFOV = Mathf.Clamp(_targetFOV - scroll * zoomSpeed, minFOV, maxFOV);
 
         var lens = vcam.m_Lens;
         lens.FieldOfView = Mathf.Lerp(lens.FieldOfView, _targetFOV, fovSmoothSpeed * Time.deltaTime);
         vcam.m_Lens = lens;
     }
+    #endregion
 
+    #region DESKTOP TRANSITION
     public void StartTransition(bool toMonitor){
         if(_onMonitor == toMonitor) return;
         if(rezzitScreen.activeSelf) return;
@@ -128,6 +135,7 @@ public class CamFoll : MonoBehaviour
     IEnumerator ZoomToMonitor(){
         _isZooming = true;
         _onMonitor = true;
+        _flickerFinished = false;
 
         Vector3 startPos = transform.position;
         Vector3 endPos = new Vector3(
@@ -150,45 +158,39 @@ public class CamFoll : MonoBehaviour
             yield return null;
         }
 
-        if(isUsingNewDesktop && desktopVisual != null){
-            desktopScreen.SetActive(true);
-            UpdatePostProcessingPriority();
+        desktopScreen.SetActive(true);
+        UpdatePostProcessingPriority();
 
-            audioSource.PlayOneShot(chimeSFX);
-            AudioManager.Instance.EnableChannel(AudioChannel.Music, false);
-            AudioManager.Instance.EnableChannel(AudioChannel.Ambience, false);
-            cc.CancelMonologue();
+        audioSource.PlayOneShot(chimeSFX);
+        AudioManager.Instance.EnableChannel(AudioChannel.Music, false);
+        AudioManager.Instance.EnableChannel(AudioChannel.Ambience, false);
+        cc.CancelMonologue();
 
-            foreach(Transform child in desktopScreen.transform) child.gameObject.SetActive(true);
-            Color start = desktopVisual.Color;
-            Color end = desktopActiveColor;
-            end.a = 1f;
+        foreach(Transform child in desktopScreen.transform)
+            child.gameObject.SetActive(true);
 
-            float a = 0f;
-            while(a < 1f){
-                a += Time.deltaTime / uiFadeDuration;
-                desktopVisual.Color = Color.Lerp(start, end, a);
-                if(crtOverlay != null) crtOverlay.alpha = a;
+        Color start = desktopVisual.Color;
+        Color end = desktopActiveColor;
+        end.a = 1f;
 
-                yield return null;
-            }
-
-            List<Coroutine> flickers = new();
-            foreach(Transform child in desktopScreen.transform){
-                if(crtOverlay != null && child == crtOverlay.transform) continue;
-                flickers.Add(StartCoroutine(RandomFadeChild(child)));
-            }
-
-            yield return new WaitForSeconds(.5f);
-        }else if(!isUsingNewDesktop && computerCanvas){
-            float f = 0f;
-            while(f < 1f){
-                f += Time.deltaTime / uiFadeDuration;
-                computerCanvas.alpha = f;
-
-                yield return null;
-            }
+        float a = 0f;
+        while(a < 1f){
+            a += Time.deltaTime / uiFadeDuration;
+            desktopVisual.Color = Color.Lerp(start, end, a);
+            if(crtOverlay != null) crtOverlay.alpha = a;
+            yield return null;
         }
+
+        _activeFlickers = 0;
+        foreach(Transform child in desktopScreen.transform){
+            if(crtOverlay != null && child == crtOverlay.transform) continue;
+
+            _activeFlickers++;
+            StartCoroutine(RandomFadeChildTracked(child));
+        }
+
+        if(_activeFlickers == 0)
+            _flickerFinished = true;
 
         _transitionRoutine = null;
         _isZooming = false;
@@ -197,39 +199,30 @@ public class CamFoll : MonoBehaviour
     IEnumerator ReturnFromMonitor(){
         _isZooming = true;
         _onMonitor = false;
+        _flickerFinished = false;
 
-        if(isUsingNewDesktop && desktopVisual != null){
-            foreach(Transform child in desktopScreen.transform){
-                if(crtOverlay != null && child == crtOverlay.transform) continue;
-                StartCoroutine(FadeChildTo(child, 0f, .3f));
-            }
-
-            Color start = desktopVisual.Color;
-            Color end = desktopVisual.Color;
-            end.a = 0f;
-
-            AudioManager.Instance.EnableChannel(AudioChannel.Music, true);
-            AudioManager.Instance.EnableChannel(AudioChannel.Ambience, true);
-
-            float a = 0f;
-            while(a < 1f){
-                a += Time.deltaTime / uiFadeDuration;
-                desktopVisual.Color = Color.Lerp(start, end, a);
-                if(crtOverlay != null) crtOverlay.alpha = 1f - a;
-
-                yield return null;
-            }
-
-            desktopScreen.SetActive(false);
-            UpdatePostProcessingPriority();
-        }else if(!isUsingNewDesktop && computerCanvas){
-            float f = 1f;
-            while(f > 0f){
-                f -= Time.deltaTime / uiFadeDuration;
-                computerCanvas.alpha = f;
-                yield return null;
-            }
+        foreach(Transform child in desktopScreen.transform){
+            if(crtOverlay != null && child == crtOverlay.transform) continue;
+            StartCoroutine(FadeChildTo(child, 0f, .3f));
         }
+
+        Color start = desktopVisual.Color;
+        Color end = desktopVisual.Color;
+        end.a = 0f;
+
+        AudioManager.Instance.EnableChannel(AudioChannel.Music, true);
+        AudioManager.Instance.EnableChannel(AudioChannel.Ambience, true);
+
+        float a = 0f;
+        while(a < 1f){
+            a += Time.deltaTime / uiFadeDuration;
+            desktopVisual.Color = Color.Lerp(start, end, a);
+            if(crtOverlay != null) crtOverlay.alpha = 1f - a;
+            yield return null;
+        }
+
+        desktopScreen.SetActive(false);
+        UpdatePostProcessingPriority();
 
         Vector3 startPos = transform.position;
         float startFOV = vcam.m_Lens.FieldOfView;
@@ -251,8 +244,20 @@ public class CamFoll : MonoBehaviour
             vcam.m_Lens = lens;
             yield return null;
         }
+
         _transitionRoutine = null;
         _isZooming = false;
+    }
+    #endregion
+
+    #region UI FADES
+    IEnumerator RandomFadeChildTracked(Transform child){
+        yield return StartCoroutine(RandomFadeChild(child));
+
+        _activeFlickers--;
+        if(_activeFlickers <= 0){
+            _flickerFinished = true;
+        }
     }
 
     IEnumerator RandomFadeChild(Transform child){
@@ -260,9 +265,6 @@ public class CamFoll : MonoBehaviour
 
         float totalDuration = Random.Range(0.8f, 1.4f);
         float elapsed = 0f;
-
-        var blocks = child.GetComponentsInChildren<UIBlock2D>(true);
-        var texts = child.GetComponentsInChildren<TextBlock>(true);
 
         while(elapsed < totalDuration){
             float targetAlpha = Random.value > 0.5f ? 1f : 0f;
@@ -290,36 +292,33 @@ public class CamFoll : MonoBehaviour
 
         while(t < 1f){
             t += Time.deltaTime / duration;
-            float a = Mathf.Lerp(0f, 1f, t);
 
             foreach(var kvp in blockStart){
                 UIBlock2D b = kvp.Key;
                 Color c = kvp.Value.c;
                 Color s = kvp.Value.s;
-                float startA = c.a;
 
-                c.a = Mathf.Lerp(startA, targetAlpha, a);
+                c.a = Mathf.Lerp(c.a, targetAlpha, t);
                 s.a = c.a;
                 b.Color = c;
                 b.Shadow.Color = s;
             }
 
-            foreach (var kvp in textStart){
+            foreach(var kvp in textStart){
                 TextBlock txt = kvp.Key;
                 Color c = kvp.Value;
-                float startA = c.a;
-                c.a = Mathf.Lerp(startA, targetAlpha, a);
+                c.a = Mathf.Lerp(c.a, targetAlpha, t);
                 txt.Color = c;
             }
 
             yield return null;
         }
     }
+    #endregion
 
+    #region POST PROCESSING
     public void UpdatePostProcessingPriority(){
-        if(!rezzitScreen || !roomVolume || !desktopVolume){
-            return;
-        }
+        if(!rezzitScreen || !roomVolume || !desktopVolume) return;
 
         if(rezzitScreen.activeSelf){
             roomVolume.priority = 0;
@@ -337,4 +336,14 @@ public class CamFoll : MonoBehaviour
             desktopVolume.priority = 0;
         }
     }
+    #endregion
+
+    /*
+    ================= OLD DESKTOP SYSTEM (DISABLED) =================
+    - computerCanvas fade logic
+    - non-CRT desktop UI
+    - isUsingNewDesktop checks
+    - bonnie blue makan spageti depan embassy indonesia
+    ================================================================
+    */
 }

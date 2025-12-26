@@ -6749,7 +6749,7 @@ Transform:
   m_GameObject: {fileID: 80217622}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40, y: 0, z: 0}
+  m_LocalPosition: {x: -37.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6772,10 +6772,10 @@ MonoBehaviour:
   layout:
     Size:
       X:
-        Raw: 15
+        Raw: 20
         Type: 0
       Y:
-        Raw: 15
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -6934,7 +6934,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    Color: {r: 0.8509804, g: 0.3254902, b: 0.09803922, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -6997,11 +6997,11 @@ MonoBehaviour:
         UVScale: {x: 1, y: 1}
         PixelsPerUnitMultiplier: 1
         scaleMode: 1
-      Mode: 1
+      Mode: 0
     SoftenEdges: 1
     FillEnabled: 1
   texture: {fileID: 0}
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 45e4ac125aa8cd149b257dade81912d3, type: 3}
 --- !u!114 &80217625
 MonoBehaviour:
   m_ObjectHideFlags: 10
@@ -7785,7 +7785,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21568628, g: 0.23921569, b: 0.2784314, a: 1}
+    Color: {r: 0.22352941, g: 0.47058824, b: 0.78431374, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -9671,7 +9671,7 @@ GameObject:
   - component: {fileID: 101781753}
   - component: {fileID: 101781754}
   m_Layer: 5
-  m_Name: Cursor
+  m_Name: Custom Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11705,13 +11705,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 123141931}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 42.5, y: 0, z: 0.00009217668}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: 42.5, y: -0.35, z: 0.00009217668}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 825202869}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!114 &123141933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11742,7 +11742,7 @@ MonoBehaviour:
         Raw: 85
         Type: 0
       Y:
-        Raw: 0
+        Raw: -0.35
         Type: 0
       Z:
         Raw: 0.00009217668
@@ -13915,7 +13915,7 @@ MonoBehaviour:
         Raw: 140
         Type: 0
       Y:
-        Raw: 100.21222
+        Raw: 100.18054
         Type: 0
       Z:
         Raw: -10
@@ -14123,8 +14123,8 @@ MonoBehaviour:
       Direction: 0
     Image:
       Adjustment:
-        CenterUV: {x: -0.51405454, y: 0.62860775}
-        UVScale: {x: 2.4192202, y: 2.958126}
+        CenterUV: {x: -0.51418483, y: 0.62864876}
+        UVScale: {x: 2.4185984, y: 2.9578977}
         PixelsPerUnitMultiplier: 1
         scaleMode: 0
       Mode: 0
@@ -14431,7 +14431,7 @@ MonoBehaviour:
     rid: 3273344437974990912
   m_ShadowCastingSource: 2
   m_ShadowMesh:
-    m_Mesh: {fileID: 1332420394}
+    m_Mesh: {fileID: 638150470}
     m_LocalBounds:
       m_Center: {x: 0, y: 0, z: 0}
       m_Extent: {x: 0.47000122, y: 1.144989, z: 0}
@@ -23614,13 +23614,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 279986949}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 42.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1194590804}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!114 &279986951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28988,7 +28988,7 @@ Transform:
   m_GameObject: {fileID: 341811317}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.5, y: 97.91874, z: -0.00018191338}
+  m_LocalPosition: {x: 5.5, y: 97.91241, z: -0.00018191338}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -36927,7 +36927,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21176471, g: 0.37254903, b: 0.6862745, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -38516,7 +38516,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.23921569, g: 0.30980393, b: 0.4627451, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -42461,7 +42461,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21568628, g: 0.23921569, b: 0.2784314, a: 1}
+    Color: {r: 0.22352941, g: 0.47058824, b: 0.78431374, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -44069,7 +44069,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21176471, g: 0.37254903, b: 0.6862745, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -49881,7 +49881,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21568628, g: 0.23921569, b: 0.2784314, a: 1}
+    Color: {r: 0.22352941, g: 0.47058824, b: 0.78431374, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -51126,7 +51126,7 @@ Transform:
   m_GameObject: {fileID: 605231133}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40, y: 0, z: 0}
+  m_LocalPosition: {x: -37.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -51149,10 +51149,10 @@ MonoBehaviour:
   layout:
     Size:
       X:
-        Raw: 15
+        Raw: 20
         Type: 0
       Y:
-        Raw: 15
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -51311,7 +51311,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    Color: {r: 1, g: 1, b: 1, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -51374,11 +51374,11 @@ MonoBehaviour:
         UVScale: {x: 1, y: 1}
         PixelsPerUnitMultiplier: 1
         scaleMode: 1
-      Mode: 1
+      Mode: 0
     SoftenEdges: 1
     FillEnabled: 1
   texture: {fileID: 0}
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 24a20db6dd8100d408efb378920b104a, type: 3}
 --- !u!114 &605231136
 MonoBehaviour:
   m_ObjectHideFlags: 10
@@ -52887,7 +52887,7 @@ Transform:
   m_GameObject: {fileID: 627052353}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -47.445312, z: 0}
+  m_LocalPosition: {x: 0, y: -50.375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -52915,7 +52915,7 @@ MonoBehaviour:
         Raw: 1
         Type: 1
       Y:
-        Raw: 17.070312
+        Raw: 35.9375
         Type: 0
       Z:
         Raw: 0
@@ -52925,7 +52925,7 @@ MonoBehaviour:
         Raw: 0
         Type: 0
       Y:
-        Raw: 94.890625
+        Raw: 100.75
         Type: 0
       Z:
         Raw: -0
@@ -53781,7 +53781,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21568628, g: 0.23921569, b: 0.2784314, a: 1}
+    Color: {r: 0.22352941, g: 0.47058824, b: 0.78431374, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -54279,6 +54279,184 @@ Transform:
   - {fileID: 1127576505}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!43 &638150470
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 12
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 36
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 20
+    localAABB:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.47000122, y: 1.144989, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 00000400050005000100000001000800090009000200010002000c000d000d000300020003001000110011000000030000000600070001000a000b0002000e000f00030012001300
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 20
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 560
+    _typelessdata: 00a4f03e008f923f00000000000080bf0000000000a4f0be008f923f00a4f0be008f923f00000000000080bf0000000000a4f0be008f92bf00a4f0be008f92bf00000000000080bf0000000000a4f03e008f92bf00a4f03e008f92bf00000000000080bf0000000000a4f03e008f923f00a4f03e008f923f00000000000000000000000000a4f0be008f923f00a4f0be008f923f00000000000000000000000000a4f03e008f923f00a4f03e008f923f000000000000803f0000000000a4f0be008f923f00a4f03e008f923f00000000000040400000000000a4f0be008f923f00a4f0be008f923f00000000000000000000000000a4f0be008f92bf00a4f0be008f92bf00000000000000000000000000a4f0be008f923f00a4f0be008f923f000000000000803f0000000000a4f0be008f92bf00a4f0be008f923f00000000000040400000000000a4f0be008f92bf00a4f0be008f92bf00000000000000000000000000a4f03e008f92bf00a4f03e008f92bf00000000000000000000000000a4f0be008f92bf00a4f0be008f92bf000000000000803f0000000000a4f03e008f92bf00a4f0be008f92bf00000000000040400000000000a4f03e008f92bf00a4f03e008f92bf00000000000000000000000000a4f03e008f923f00a4f03e008f923f00000000000000000000000000a4f03e008f92bf00a4f03e008f92bf000000000000803f0000000000a4f03e008f923f00a4f03e008f92bf00000000000040400000000000a4f03e008f923f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_MeshUsageFlags: 0
+  m_CookingOptions: 30
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  'm_MeshMetrics[0]': 1
+  'm_MeshMetrics[1]': 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
+  m_MeshLodInfo:
+    serializedVersion: 2
+    m_LodSelectionCurve:
+      serializedVersion: 1
+      m_LodSlope: 0
+      m_LodBias: 0
+    m_NumLevels: 1
+    m_SubMeshes:
+    - serializedVersion: 2
+      m_Levels:
+      - serializedVersion: 1
+        m_IndexStart: 0
+        m_IndexCount: 0
 --- !u!4 &640677316 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4bb19575c17fe5048a6308415042a2b8, type: 3}
@@ -55015,7 +55193,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21568628, g: 0.23921569, b: 0.2784314, a: 1}
+    Color: {r: 0.22352941, g: 0.47058824, b: 0.78431374, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -55451,7 +55629,7 @@ Transform:
   m_GameObject: {fileID: 653717187}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.5, y: 49.91874, z: -0.00018191338}
+  m_LocalPosition: {x: 5.5, y: 49.912407, z: -0.00018191338}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -56050,7 +56228,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21176471, g: 0.37254903, b: 0.6862745, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -60789,7 +60967,7 @@ Transform:
   m_GameObject: {fileID: 707710432}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40, y: 0, z: 0}
+  m_LocalPosition: {x: -37.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -60812,10 +60990,10 @@ MonoBehaviour:
   layout:
     Size:
       X:
-        Raw: 15
+        Raw: 20
         Type: 0
       Y:
-        Raw: 15
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -60974,7 +61152,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    Color: {r: 0, g: 0.44705883, b: 0.7411765, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -61037,11 +61215,11 @@ MonoBehaviour:
         UVScale: {x: 1, y: 1}
         PixelsPerUnitMultiplier: 1
         scaleMode: 1
-      Mode: 1
+      Mode: 0
     SoftenEdges: 1
     FillEnabled: 1
   texture: {fileID: 0}
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 45e4ac125aa8cd149b257dade81912d3, type: 3}
 --- !u!114 &707710435
 MonoBehaviour:
   m_ObjectHideFlags: 10
@@ -61385,7 +61563,7 @@ Transform:
   m_GameObject: {fileID: 714053217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.30070576, z: 0, w: 0.953717}
-  m_LocalPosition: {x: -442, y: -8.325043, z: -10}
+  m_LocalPosition: {x: -442, y: -8.350403, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -65390,7 +65568,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.5, y: 0}
+  m_AnchoredPosition: {x: 15, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &766449458
@@ -65478,7 +65656,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -35, y: -0, z: -35, w: -0}
+  m_margin: {x: -32.5, y: -0, z: -32.5, w: -0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -65514,7 +65692,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 25
+        Raw: 30
         Type: 0
       Y:
         Raw: 0
@@ -69384,7 +69562,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.23921569, g: 0.30980393, b: 0.4627451, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -71075,7 +71253,7 @@ Transform:
   m_GameObject: {fileID: 825202868}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 32.070312, z: -0.00019203474}
+  m_LocalPosition: {x: 0, y: 35, z: -0.00019203474}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -71274,7 +71452,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.1}
+    Color: {r: 1, g: 0, b: 0, a: 0.01}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -72223,7 +72401,7 @@ Transform:
   m_GameObject: {fileID: 831410934}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -31.410156, z: 0}
+  m_LocalPosition: {x: 0, y: -32.875, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -72251,7 +72429,7 @@ MonoBehaviour:
         Raw: 1
         Type: 1
       Y:
-        Raw: 17.070312
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -72261,7 +72439,7 @@ MonoBehaviour:
         Raw: 0
         Type: 0
       Y:
-        Raw: 62.820312
+        Raw: 65.75
         Type: 0
       Z:
         Raw: -0
@@ -72753,7 +72931,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21176471, g: 0.37254903, b: 0.6862745, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -74421,7 +74599,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &845910815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79018,7 +79196,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21176471, g: 0.37254903, b: 0.6862745, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -82300,7 +82478,7 @@ Transform:
   m_GameObject: {fileID: 944161476}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 133.01953, z: 0}
+  m_LocalPosition: {x: 5, y: 120.65625, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -82342,7 +82520,7 @@ MonoBehaviour:
         Raw: 1
         Type: 1
       Y:
-        Raw: 111.96094
+        Raw: 136.6875
         Type: 0
       Z:
         Raw: 0
@@ -94671,7 +94849,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.5, y: 0}
+  m_AnchoredPosition: {x: 15, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1083742733
@@ -94759,7 +94937,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -35, y: -0, z: -35, w: -0}
+  m_margin: {x: -32.5, y: -0, z: -32.5, w: -0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -94795,7 +94973,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 25
+        Raw: 30
         Type: 0
       Y:
         Raw: 0
@@ -98539,7 +98717,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21568628, g: 0.23921569, b: 0.2784314, a: 1}
+    Color: {r: 0.22352941, g: 0.47058824, b: 0.78431374, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -101357,7 +101535,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.23921569, g: 0.30980393, b: 0.4627451, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -102300,7 +102478,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -378, y: -107.91874, z: -378, w: -107.91874}
+  m_margin: {x: -378, y: -107.91241, z: -378, w: -107.91241}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -102962,7 +103140,7 @@ Transform:
   m_GameObject: {fileID: 1194590803}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 48.10547, z: -0.000038406946}
+  m_LocalPosition: {x: 0, y: 60.46875, z: -0.000038406946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -103161,7 +103339,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.1}
+    Color: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -103314,7 +103492,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.5, y: 0}
+  m_AnchoredPosition: {x: 15, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1195370629
@@ -103402,7 +103580,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -35, y: -0, z: -35, w: -0}
+  m_margin: {x: -32.5, y: -0, z: -32.5, w: -0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -103431,14 +103609,14 @@ MonoBehaviour:
         Raw: 1
         Type: 1
       Y:
-        Raw: 17.070312
+        Raw: 35.9375
         Type: 0
       Z:
         Raw: 0
         Type: 0
     Position:
       X:
-        Raw: 25
+        Raw: 30
         Type: 0
       Y:
         Raw: 0
@@ -104093,7 +104271,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.5, y: 0}
+  m_AnchoredPosition: {x: 15, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1204053346
@@ -104181,7 +104359,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -35, y: -0, z: -35, w: -0}
+  m_margin: {x: -32.5, y: -0, z: -32.5, w: -0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -104217,7 +104395,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 25
+        Raw: 30
         Type: 0
       Y:
         Raw: 0
@@ -105493,7 +105671,7 @@ Transform:
   m_GameObject: {fileID: 1213646840}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.5, y: 1.9187393, z: -0.00018191338}
+  m_LocalPosition: {x: 5.5, y: 1.9124069, z: -0.00018191338}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -105838,7 +106016,7 @@ MonoBehaviour:
         Raw: 140
         Type: 0
       Y:
-        Raw: 100.21228
+        Raw: 100.1806
         Type: 0
       Z:
         Raw: -58
@@ -106046,8 +106224,8 @@ MonoBehaviour:
       Direction: 0
     Image:
       Adjustment:
-        CenterUV: {x: 0.52652335, y: -0.7454174}
-        UVScale: {x: 2.2714431, y: 3.7777452}
+        CenterUV: {x: 0.5266584, y: -0.7454673}
+        UVScale: {x: 2.2708523, y: 3.7773995}
         PixelsPerUnitMultiplier: 1
         scaleMode: 0
       Mode: 0
@@ -108589,7 +108767,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.23921569, g: 0.30980393, b: 0.4627451, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -110032,7 +110210,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1240733141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110402,9 +110580,13 @@ MonoBehaviour:
   - {fileID: 831410934}
   pinnedBlock: {fileID: 1194590806}
   tagsBlock: {fileID: 825202871}
+  pinnedArrow: {fileID: 279986950}
+  tagsArrow: {fileID: 123141932}
   sideBar: {fileID: 957229087}
+  hoverBlockColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.078431375}
+  unhoverBlockColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0}
   minSideBar: 0.13
-  maxSideBar: 0.33
+  maxSideBar: 0.35
 --- !u!1 &1242795662
 GameObject:
   m_ObjectHideFlags: 0
@@ -116864,184 +117046,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1332313534}
   m_CullTransparentMesh: 1
---- !u!43 &1332420394
-Mesh:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 12
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 36
-    topology: 0
-    baseVertex: 0
-    firstVertex: 0
-    vertexCount: 20
-    localAABB:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0.47000122, y: 1.144989, z: 0}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexFormat: 0
-  m_IndexBuffer: 00000400050005000100000001000800090009000200010002000c000d000d000300020003001000110011000000030000000600070001000a000b0002000e000f00030012001300
-  m_VertexData:
-    serializedVersion: 3
-    m_VertexCount: 20
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 560
-    _typelessdata: 00a4f03e008f923f00000000000080bf0000000000a4f0be008f923f00a4f0be008f923f00000000000080bf0000000000a4f0be008f92bf00a4f0be008f92bf00000000000080bf0000000000a4f03e008f92bf00a4f03e008f92bf00000000000080bf0000000000a4f03e008f923f00a4f03e008f923f00000000000000000000000000a4f0be008f923f00a4f0be008f923f00000000000000000000000000a4f03e008f923f00a4f03e008f923f000000000000803f0000000000a4f0be008f923f00a4f03e008f923f00000000000040400000000000a4f0be008f923f00a4f0be008f923f00000000000000000000000000a4f0be008f92bf00a4f0be008f92bf00000000000000000000000000a4f0be008f923f00a4f0be008f923f000000000000803f0000000000a4f0be008f92bf00a4f0be008f923f00000000000040400000000000a4f0be008f92bf00a4f0be008f92bf00000000000000000000000000a4f03e008f92bf00a4f03e008f92bf00000000000000000000000000a4f0be008f92bf00a4f0be008f92bf000000000000803f0000000000a4f03e008f92bf00a4f0be008f92bf00000000000040400000000000a4f03e008f92bf00a4f03e008f92bf00000000000000000000000000a4f03e008f923f00a4f03e008f923f00000000000000000000000000a4f03e008f92bf00a4f03e008f92bf000000000000803f0000000000a4f03e008f923f00a4f03e008f92bf00000000000040400000000000a4f03e008f923f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_MeshUsageFlags: 0
-  m_CookingOptions: 30
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  'm_MeshMetrics[0]': 1
-  'm_MeshMetrics[1]': 1
-  m_MeshOptimizationFlags: 1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
-  m_MeshLodInfo:
-    serializedVersion: 2
-    m_LodSelectionCurve:
-      serializedVersion: 1
-      m_LodSlope: 0
-      m_LodBias: 0
-    m_NumLevels: 1
-    m_SubMeshes:
-    - serializedVersion: 2
-      m_Levels:
-      - serializedVersion: 1
-        m_IndexStart: 0
-        m_IndexCount: 0
 --- !u!1 &1338154051
 GameObject:
   m_ObjectHideFlags: 0
@@ -128198,7 +128202,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.23921569, g: 0.30980393, b: 0.4627451, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -130028,7 +130032,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.21176471, g: 0.37254903, b: 0.6862745, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -134037,15 +134041,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7599235840010813280, guid: 46640eb424e726547b5f2426e3180e95, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.00067452644
+      value: 0.0006745661
       objectReference: {fileID: 0}
     - target: {fileID: 7599235840010813280, guid: 46640eb424e726547b5f2426e3180e95, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.00067452644
+      value: 0.0006745661
       objectReference: {fileID: 0}
     - target: {fileID: 7599235840010813280, guid: 46640eb424e726547b5f2426e3180e95, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.00067452644
+      value: 0.0006745661
       objectReference: {fileID: 0}
     - target: {fileID: 7599235840010813280, guid: 46640eb424e726547b5f2426e3180e95, type: 3}
       propertyPath: m_LocalPosition.x
@@ -134586,7 +134590,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.23921569, g: 0.30980393, b: 0.4627451, a: 1}
+    Color: {r: 0.30588236, g: 0.6039216, b: 0.93333334, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -136262,7 +136266,7 @@ MonoBehaviour:
         Raw: 1
         Type: 1
       Y:
-        Raw: 79.890625
+        Raw: 85.75
         Type: 0
       Z:
         Raw: 0
@@ -136272,7 +136276,7 @@ MonoBehaviour:
         Raw: 0
         Type: 0
       Y:
-        Raw: 151.96094
+        Raw: 176.6875
         Type: 0
       Z:
         Raw: 0
@@ -136510,7 +136514,7 @@ Transform:
   m_GameObject: {fileID: 1590739104}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: -2.90625, z: 0}
+  m_LocalPosition: {x: 5, y: -30.5625, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -137332,7 +137336,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -378, y: -107.91874, z: -378, w: -107.91874}
+  m_margin: {x: -378, y: -107.91241, z: -378, w: -107.91241}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -138137,7 +138141,7 @@ MonoBehaviour:
         Raw: 140
         Type: 0
       Y:
-        Raw: 100.21222
+        Raw: 100.18054
         Type: 0
       Z:
         Raw: -10
@@ -138345,8 +138349,8 @@ MonoBehaviour:
       Direction: 0
     Image:
       Adjustment:
-        CenterUV: {x: 0.5066415, y: 0.19755018}
-        UVScale: {x: 2.365184, y: 1.2927088}
+        CenterUV: {x: 0.5067699, y: 0.19756413}
+        UVScale: {x: 2.364576, y: 1.2926182}
         PixelsPerUnitMultiplier: 1
         scaleMode: 0
       Mode: 0
@@ -143161,7 +143165,7 @@ Transform:
   m_GameObject: {fileID: 1692635850}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 16.695312, z: 0}
+  m_LocalPosition: {x: 0, y: 27.59375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -143189,7 +143193,7 @@ MonoBehaviour:
         Raw: 1
         Type: 1
       Y:
-        Raw: 17.070312
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -143581,7 +143585,7 @@ Transform:
   m_GameObject: {fileID: 1697094633}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -15.375, z: 0}
+  m_LocalPosition: {x: 0, y: -7.40625, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -143609,7 +143613,7 @@ MonoBehaviour:
         Raw: 1
         Type: 1
       Y:
-        Raw: 17.070312
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -143619,7 +143623,7 @@ MonoBehaviour:
         Raw: 0
         Type: 0
       Y:
-        Raw: 62.820312
+        Raw: 65.75
         Type: 0
       Z:
         Raw: 0
@@ -145832,7 +145836,7 @@ Transform:
   m_GameObject: {fileID: 1719634106}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40, y: 0, z: 0}
+  m_LocalPosition: {x: -37.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -145855,10 +145859,10 @@ MonoBehaviour:
   layout:
     Size:
       X:
-        Raw: 15
+        Raw: 20
         Type: 0
       Y:
-        Raw: 15
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -146017,7 +146021,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    Color: {r: 1, g: 1, b: 1, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -146080,11 +146084,11 @@ MonoBehaviour:
         UVScale: {x: 1, y: 1}
         PixelsPerUnitMultiplier: 1
         scaleMode: 1
-      Mode: 1
+      Mode: 0
     SoftenEdges: 1
     FillEnabled: 1
   texture: {fileID: 0}
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: d883b9e4c12ce3a4b8b906d098eff551, type: 3}
 --- !u!114 &1719634109
 MonoBehaviour:
   m_ObjectHideFlags: 10
@@ -157625,7 +157629,7 @@ Transform:
   m_GameObject: {fileID: 1846711813}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.66015625, z: 0}
+  m_LocalPosition: {x: 0, y: 2.125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -157653,7 +157657,7 @@ MonoBehaviour:
         Raw: 1
         Type: 1
       Y:
-        Raw: 17.070312
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -169338,10 +169342,8 @@ MonoBehaviour:
   zoomSpeed: 10
   fovSmoothSpeed: 10
   monitorTarget: {fileID: 244377087}
-  computerCanvas: {fileID: 1058751522}
   zoomDuration: 0.75
   uiFadeDuration: 0.25
-  isUsingNewDesktop: 1
   desktopScreen: {fileID: 94825098}
   rezzitScreen: {fileID: 1931384080}
   desktopVisual: {fileID: 94825104}
@@ -179690,7 +179692,7 @@ Transform:
   m_GameObject: {fileID: 2131224299}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40, y: 0, z: 0}
+  m_LocalPosition: {x: -37.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -179713,10 +179715,10 @@ MonoBehaviour:
   layout:
     Size:
       X:
-        Raw: 15
+        Raw: 20
         Type: 0
       Y:
-        Raw: 15
+        Raw: 20
         Type: 0
       Z:
         Raw: 0
@@ -179875,7 +179877,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    Color: {r: 1, g: 1, b: 1, a: 1}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -179938,11 +179940,11 @@ MonoBehaviour:
         UVScale: {x: 1, y: 1}
         PixelsPerUnitMultiplier: 1
         scaleMode: 1
-      Mode: 1
+      Mode: 0
     SoftenEdges: 1
     FillEnabled: 1
   texture: {fileID: 0}
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: a8efea801216422489a1d583923ea9c9, type: 3}
 --- !u!114 &2131224302
 MonoBehaviour:
   m_ObjectHideFlags: 10
@@ -181106,7 +181108,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.5, y: 0}
+  m_AnchoredPosition: {x: 15, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2137871276
@@ -181194,7 +181196,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -35, y: -0, z: -35, w: -0}
+  m_margin: {x: -32.5, y: -0, z: -32.5, w: -0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -181230,7 +181232,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 25
+        Raw: 30
         Type: 0
       Y:
         Raw: 0
@@ -181507,7 +181509,7 @@ MonoBehaviour:
         Raw: 140
         Type: 0
       Y:
-        Raw: 100.21225
+        Raw: 100.18057
         Type: 0
       Z:
         Raw: -10
@@ -181715,8 +181717,8 @@ MonoBehaviour:
       Direction: 0
     Image:
       Adjustment:
-        CenterUV: {x: -0.5140544, y: -0.53952146}
-        UVScale: {x: 2.4192212, y: 2.3411574}
+        CenterUV: {x: -0.51418495, y: -0.53955823}
+        UVScale: {x: 2.418598, y: 2.340988}
         PixelsPerUnitMultiplier: 1
         scaleMode: 0
       Mode: 0

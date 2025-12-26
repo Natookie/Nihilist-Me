@@ -37,20 +37,26 @@ public class NewDesktopManager : MonoBehaviour
         };
     }
 
+    void Start(){
+        SetAppActive(false);
+    }
+
     void Update(){
+        if(camFoll.IsDesktopReady) SetAppActive(true);
         clockText.Text = System.DateTime.Now.ToString("HH:mm");
     }
 
     public void OpenApp(string appName){
+        if(!camFoll.IsDesktopReady) return;
         if(!appMap.TryGetValue(appName, out var app)){
             if(appName == "rezzit") HandleRezzit();
             return;
         }
-
         app.Open();
     }
 
     public void CloseApp(string appName){
+        if(!camFoll.IsDesktopReady) return;
         if(!appMap.TryGetValue(appName, out var app)) return;
         app.Close();
     }
@@ -59,5 +65,11 @@ public class NewDesktopManager : MonoBehaviour
         camFoll.desktopScreen.SetActive(false);
         rezzit.SetActive(true);
         camFoll.UpdatePostProcessingPriority();
+    }
+
+    void SetAppActive(bool state){
+        files.SetActive(state);
+        corner.SetActive(state);
+        nokion.SetActive(state);
     }
 }
