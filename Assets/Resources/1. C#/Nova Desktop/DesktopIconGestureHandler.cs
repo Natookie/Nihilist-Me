@@ -104,9 +104,7 @@ public class DesktopIconGestureHandler : MonoBehaviour
             ? pressedIconOriginalParent.GetChild(0)
             : pressedIconOriginalParent;
 
-        pressedIconOriginalScreenPos =
-            Camera.main.WorldToScreenPoint(pressedChild.position);
-
+        pressedIconOriginalScreenPos = Camera.main.WorldToScreenPoint(pressedChild.position);
         lastMousePos = Input.mousePosition;
     }
 

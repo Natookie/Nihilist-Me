@@ -63,10 +63,12 @@ public class DesktopManager : MonoBehaviour
     }
 
     void Update(){
+        /*
+        Not used anymore:
         HandleWifi();
         HandleAudio();
-
         HandleClock();
+        */
     }
 
     void HandleWifi(){
@@ -102,4 +104,5 @@ public class DesktopManager : MonoBehaviour
     void HandleClock(){
         clockText.text = " > " + System.DateTime.Now.ToString("hh:mm tt");
     }
+    
 }

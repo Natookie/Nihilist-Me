@@ -625,7 +625,7 @@ public class Console : MonoBehaviour
         foreach(var id in split) if(!string.IsNullOrEmpty(id)) unlockedCosmetics.Add(id);
     }
 
-    private class Cosmetic  {
+    private class Cosmetic {
         public string id;
         public string displayName;
         public int weight;

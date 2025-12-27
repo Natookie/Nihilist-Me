@@ -48,6 +48,9 @@ public class CamFoll : MonoBehaviour
     public CustomCursor cc;
     public CinemachineVirtualCamera vcam;
 
+    [Header("DEBUG")]
+    public bool disableDesktopFlicker = false;
+
     float _targetFOV;
     float _currentXOffset;
 
@@ -182,15 +185,24 @@ public class CamFoll : MonoBehaviour
         }
 
         _activeFlickers = 0;
-        foreach(Transform child in desktopScreen.transform){
-            if(crtOverlay != null && child == crtOverlay.transform) continue;
 
-            _activeFlickers++;
-            StartCoroutine(RandomFadeChildTracked(child));
-        }
+        if(disableDesktopFlicker){
+            foreach(Transform child in desktopScreen.transform){
+                if(crtOverlay != null && child == crtOverlay.transform) continue;
+                StartCoroutine(FadeChildTo(child, 1f, 0.01f));
+            }
 
-        if(_activeFlickers == 0)
             _flickerFinished = true;
+        }else{
+            foreach(Transform child in desktopScreen.transform){
+                if(crtOverlay != null && child == crtOverlay.transform) continue;
+
+                _activeFlickers++;
+                StartCoroutine(RandomFadeChildTracked(child));
+            }
+
+            if(_activeFlickers == 0) _flickerFinished = true;
+        }
 
         _transitionRoutine = null;
         _isZooming = false;
@@ -255,9 +267,7 @@ public class CamFoll : MonoBehaviour
         yield return StartCoroutine(RandomFadeChild(child));
 
         _activeFlickers--;
-        if(_activeFlickers <= 0){
-            _flickerFinished = true;
-        }
+        if(_activeFlickers <= 0) _flickerFinished = true;
     }
 
     IEnumerator RandomFadeChild(Transform child){

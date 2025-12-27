@@ -28,7 +28,6 @@ public class NewDesktopManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         appMap = new Dictionary<string, AppGestureHandler>{
             { "files", files.GetComponent<AppGestureHandler>() },
