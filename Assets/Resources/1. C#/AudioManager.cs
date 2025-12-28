@@ -41,7 +41,6 @@ public class AudioManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start(){
@@ -88,6 +87,26 @@ public class AudioManager : MonoBehaviour
                 StartFade(AudioChannel.UI, enabled);
                 break;
         }
+    }
+
+    public void ResetAllChannel()
+    {
+        // Clear all coroutine
+        musicFade = null;
+        sfxFade = null;
+        ambienceFade = null;
+        uiFade = null;
+        // Set all channels to enable
+        musicEnabled = true;
+        sfxEnabled = true;
+        ambienceEnabled = true;
+        uiEnabled = true;
+        // Reset all mixer volumes
+        mixer.SetFloat("MusicVolume", 1.0f);
+        mixer.SetFloat("MasterVolume", 1.0f);
+        mixer.SetFloat("SFXVolume", 1.0f);
+        mixer.SetFloat("AmbienceVolume", 1.0f);
+        mixer.SetFloat("UIVolume", 1.0f);
     }
 
     public void SetVolume(AudioChannel channel, float value){

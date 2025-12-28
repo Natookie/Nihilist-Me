@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Assertions;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -26,9 +28,9 @@ public class GameManager : MonoBehaviour
 
     [Header("REFERENCES")]
     public Transform desktopCanvas;
-    public PauseManager pauseManager;
     public DesktopManager dm;
     public Volume pp;
+    private PauseManager pauseManager;
 
     public int currRound = 1;
     [HideInInspector] public bool isPaused;
@@ -37,10 +39,10 @@ public class GameManager : MonoBehaviour
     //Singleton
     public static GameManager Instance { get; private set; }
     void Awake(){
-        if(Instance != null){
-            Destroy(gameObject);
-            return;
-        }
+        // if(Instance != null){
+        //     Destroy(gameObject);
+        //     return;
+        // }
         Instance = this;
 
         if(pp != null) pp.profile.TryGet<DepthOfField>(out _dof);
@@ -56,6 +58,15 @@ public class GameManager : MonoBehaviour
     }
 
     void HandlePause(){
+        // Try find the pause manager if empty
+        if(pauseManager == null)
+        {
+            pauseManager = PauseManager.Instance;
+            Assert.IsNotNull(pauseManager, "Pause manager in this scene has no local instance");
+        }
+        // Check if pause enabled
+        if(!pauseManager.isPauseEnabled) return;
+        // Check for pause input
         if(Input.GetKeyDown(KeyCode.Escape)){
             isPaused = !isPaused;
             Time.timeScale = isPaused ? 0f : 1f;

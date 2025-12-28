@@ -5,11 +5,14 @@ using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine.Assertions;
-using UnityEditor.SearchService;
-using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
+    public static PauseManager Instance {private set; get;}
+
+    // Pause variables
+    public bool isPauseEnabled = true;
+
     [Header("GAME TITLE")]
     public TextMeshProUGUI gameTitle;
     public float typingSpeed = .05f;
@@ -18,8 +21,12 @@ public class PauseManager : MonoBehaviour
     public float scrambleSpeed = .03f;
     public float scrambleDuration = .5f;
 
-    [Header("MENU CONFIG")]
-    public GameObject rootNode;
+    [Header("OBJECT REFERENCES")]
+    [SerializeField] private GameObject rootNode;
+    [SerializeField] private TypingEffect titleTypingEffect;
+    // private GameManager gm;
+    // private RectTransform textRect;
+    // private Camera uiCamera;
 
     [SerializeField] private List<PauseOptionSelection> pauseOptionSelections;
     // public GameObject[] selectableOptions;
@@ -43,31 +50,35 @@ public class PauseManager : MonoBehaviour
     public Color deselectedColor = Color.white;
 
     // private int currentOptionIndex = 0;
-    private GameManager gm;
-    private RectTransform textRect;
-    private Camera uiCamera;
 
-    private string fullTitle = "Nihilist Me";
-    private string displayedTitle = "";
-    private bool cursorVisible = false;
-    private Coroutine cursorRoutine; 
+    // private string fullTitle = "Nihilist Me";
+    // private string displayedTitle = "";
+    // private bool cursorVisible = false;
+    // private Coroutine cursorRoutine; 
 
-    private bool isAnimating;
-    private bool hasAnimated;
-    private bool isScrambling;
-    private Coroutine scrambleRoutine;
+    // private bool isAnimating;
+    // private bool hasAnimated;
+    // private bool isScrambling;
+    // private Coroutine scrambleRoutine;
 
 
 
     private PauseOptionSelection currentPauseOptionSelection;
 
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start(){
-        gm = GameManager.Instance;
-        textRect = gameTitle.GetComponent<RectTransform>();
+        // Check if pause enabled
+        if(!isPauseEnabled) return;
 
-        Canvas canvas = gameTitle.canvas;
-        uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+        // gm = GameManager.Instance;
+        // textRect = gameTitle.GetComponent<RectTransform>();
+
+        // Canvas canvas = gameTitle.canvas;
+        // uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
 
         // if(sideObjects != null && sideObjects.Length > 0){
         //     int len = sideObjects.Length;
@@ -89,6 +100,8 @@ public class PauseManager : MonoBehaviour
         // }
 
         // Assertion check
+        Assert.IsNotNull(rootNode, "rootNode is missing");
+        Assert.IsNotNull(titleTypingEffect, "titleTypingEffect is missing");
         Assert.IsTrue(pauseOptionSelections.Count > 0, "pauseOptionSelections is empty");
         // Connect events
         foreach(PauseOptionSelection pauseOptionSelection in pauseOptionSelections)
@@ -100,7 +113,10 @@ public class PauseManager : MonoBehaviour
     }
 
     void Update(){
-        HandleTitle();
+        // Check if pause enabled
+        if(!isPauseEnabled) return;
+
+        // HandleTitle();
         // HandleList();
         // HandleMouseSelection();
     }
@@ -108,17 +124,24 @@ public class PauseManager : MonoBehaviour
     #region MAIN FUNCTIONS
     public void OpenPauseMenu()
     {
+        // Check if pause enabled
+        if(!isPauseEnabled) return;
+
         rootNode.SetActive(true);
 
         StopAllCoroutines();
         ResetPauseMenu();
 
-        StartCoroutine(TypeTitle());
+        titleTypingEffect.EnableEffect();
         StartCoroutine(ShowAllOptionSelection());
     }
 
     public void ClosePauseMenu()
     {
+        // Check if pause enabled
+        if(!isPauseEnabled) return;
+
+        titleTypingEffect.DisableEffect();
         rootNode.SetActive(false);
 
         // In case you want to add any extra animation when closing pause menu
@@ -126,96 +149,97 @@ public class PauseManager : MonoBehaviour
 
     public void ExitGame()
     {
-        SceneManager.LoadScene("Main Menu Scene");
+        AudioManager.Instance.ResetAllChannel();
+        SceneChangeManager.Instance.ChangeToMenu();
     }
     #endregion
 
-    #region TITLE ANIMATION
-    void HandleTitle(){
-        if(!gm.isPaused && hasAnimated){
-            hasAnimated = false;
-            if(cursorRoutine != null) StopCoroutine(cursorRoutine);
-            if(scrambleRoutine != null) StopCoroutine(scrambleRoutine);
-            StopCoroutine(TypeTitle());
+    // #region TITLE ANIMATION
+    // void HandleTitle(){
+    //     if(!gm.isPaused && hasAnimated){
+    //         hasAnimated = false;
+    //         if(cursorRoutine != null) StopCoroutine(cursorRoutine);
+    //         if(scrambleRoutine != null) StopCoroutine(scrambleRoutine);
+    //         StopCoroutine(TypeTitle());
 
-            gameTitle.text = "";
-        }
+    //         gameTitle.text = "";
+    //     }
 
-        if(gm.isPaused && !isAnimating) DetectHoverScramble();
-    }
+    //     if(gm.isPaused && !isAnimating) DetectHoverScramble();
+    // }
 
-    IEnumerator TypeTitle(){
-        isAnimating = true;
-        hasAnimated = true;
-        displayedTitle = "";
+    // IEnumerator TypeTitle(){
+    //     isAnimating = true;
+    //     hasAnimated = true;
+    //     displayedTitle = "";
 
-        for(int i = 0; i < fullTitle.Length; i++){
-            displayedTitle += fullTitle[i];
-            UpdateTitleDisplay();
-            yield return new WaitForSecondsRealtime(typingSpeed);
-        }
+    //     for(int i = 0; i < fullTitle.Length; i++){
+    //         displayedTitle += fullTitle[i];
+    //         UpdateTitleDisplay();
+    //         yield return new WaitForSecondsRealtime(typingSpeed);
+    //     }
 
-        isAnimating = false;
+    //     isAnimating = false;
 
-        if(cursorRoutine != null) StopCoroutine(cursorRoutine);
-        cursorRoutine = StartCoroutine(CursorBlink());
-    }
+    //     if(cursorRoutine != null) StopCoroutine(cursorRoutine);
+    //     cursorRoutine = StartCoroutine(CursorBlink());
+    // }
 
-    void UpdateTitleDisplay() => gameTitle.text = displayedTitle + (cursorVisible ? "_" : "");
+    // void UpdateTitleDisplay() => gameTitle.text = displayedTitle + (cursorVisible ? "_" : "");
 
-    IEnumerator CursorBlink(){
-        cursorVisible = true;
+    // IEnumerator CursorBlink(){
+    //     cursorVisible = true;
 
-        while(gm.isPaused){
-            cursorVisible = !cursorVisible;
-            UpdateTitleDisplay();
-            yield return new WaitForSecondsRealtime(cursorBlinkSpeed);
-        }
+    //     while(gm.isPaused){
+    //         cursorVisible = !cursorVisible;
+    //         UpdateTitleDisplay();
+    //         yield return new WaitForSecondsRealtime(cursorBlinkSpeed);
+    //     }
 
-        cursorVisible = false;
-        UpdateTitleDisplay();
-    }
+    //     cursorVisible = false;
+    //     UpdateTitleDisplay();
+    // }
 
 
-    void DetectHoverScramble(){
-        if(gameTitle == null || isScrambling) return;
+    // void DetectHoverScramble(){
+    //     if(gameTitle == null || isScrambling) return;
 
-        Vector2 mousePos = Input.mousePosition;
-        if(!RectTransformUtility.RectangleContainsScreenPoint(textRect, mousePos, uiCamera)) return;
+    //     Vector2 mousePos = Input.mousePosition;
+    //     if(!RectTransformUtility.RectangleContainsScreenPoint(textRect, mousePos, uiCamera)) return;
 
-        int charIndex = TMP_TextUtilities.FindIntersectingCharacter(gameTitle, mousePos, uiCamera, true);
-        if(charIndex != -1 && charIndex < fullTitle.Length){
-            if(scrambleRoutine != null) StopCoroutine(scrambleRoutine);
-            scrambleRoutine = StartCoroutine(ScrambleTextAround(charIndex));
-        }
-    }
+    //     int charIndex = TMP_TextUtilities.FindIntersectingCharacter(gameTitle, mousePos, uiCamera, true);
+    //     if(charIndex != -1 && charIndex < fullTitle.Length){
+    //         if(scrambleRoutine != null) StopCoroutine(scrambleRoutine);
+    //         scrambleRoutine = StartCoroutine(ScrambleTextAround(charIndex));
+    //     }
+    // }
 
-    IEnumerator ScrambleTextAround(int centerIndex){
-        isScrambling = true;
-        float elapsed = 0f;
+    // IEnumerator ScrambleTextAround(int centerIndex){
+    //     isScrambling = true;
+    //     float elapsed = 0f;
 
-        while(elapsed < scrambleDuration){
-            StringBuilder sb = new StringBuilder(fullTitle);
-            int start = Mathf.Max(0, centerIndex - cursorRadius);
-            int end = Mathf.Min(fullTitle.Length - 1, centerIndex + cursorRadius);
+    //     while(elapsed < scrambleDuration){
+    //         StringBuilder sb = new StringBuilder(fullTitle);
+    //         int start = Mathf.Max(0, centerIndex - cursorRadius);
+    //         int end = Mathf.Min(fullTitle.Length - 1, centerIndex + cursorRadius);
 
-            for(int i = start; i <= end; i++){
-                char c = fullTitle[i];
-                if(char.IsLetter(c)) sb[i] = (char)Random.Range(65, 123);
-            }
+    //         for(int i = start; i <= end; i++){
+    //             char c = fullTitle[i];
+    //             if(char.IsLetter(c)) sb[i] = (char)Random.Range(65, 123);
+    //         }
 
-            displayedTitle = sb.ToString();
-            UpdateTitleDisplay();
+    //         displayedTitle = sb.ToString();
+    //         UpdateTitleDisplay();
 
-            yield return new WaitForSecondsRealtime(scrambleSpeed);
-            elapsed += scrambleSpeed;
-        }
+    //         yield return new WaitForSecondsRealtime(scrambleSpeed);
+    //         elapsed += scrambleSpeed;
+    //     }
 
-        displayedTitle = fullTitle;
-        UpdateTitleDisplay();
-        isScrambling = false;
-    }
-    #endregion
+    //     displayedTitle = fullTitle;
+    //     UpdateTitleDisplay();
+    //     isScrambling = false;
+    // }
+    // #endregion
 
     // #region LIST HANDLING
     // void HandleList(){
