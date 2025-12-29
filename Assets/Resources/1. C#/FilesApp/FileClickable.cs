@@ -1,6 +1,8 @@
 using UnityEngine;
 using Nova;
 
+[RequireComponent(typeof(Interactable))]
+[RequireComponent(typeof(FileItem))]
 public class FileClickable : MonoBehaviour
 {
     FileItem file;
@@ -20,3 +22,4 @@ public class FileClickable : MonoBehaviour
         if(FileOpener.Instance != null) FileOpener.Instance.Open(file);
     }
 }
+

@@ -109,6 +109,11 @@ public class AppGestureHandler : MonoBehaviour
     }
 
     public void Open(){
+        if(State == AppWindowState.Open){
+            transform.SetAsLastSibling();
+            return;
+        }
+
         Root.GetComponent<Interactable>().enabled = true;
         transform.SetAsLastSibling();
 
