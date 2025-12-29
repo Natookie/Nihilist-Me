@@ -112,10 +112,8 @@ public class AppGestureHandler : MonoBehaviour
         Root.GetComponent<Interactable>().enabled = true;
         transform.SetAsLastSibling();
 
-        if(State == AppWindowState.Minimized)
-            MoveTo(lastMinimizedPos, true);
-        else
-            MoveTo(new Vector3(DEFAULT_X, 0f, originalPos.z), true);
+        if(State == AppWindowState.Minimized) MoveTo(lastMinimizedPos, true);
+        else MoveTo(new Vector3(DEFAULT_X, 0f, originalPos.z), true);
 
         State = AppWindowState.Open;
     }
