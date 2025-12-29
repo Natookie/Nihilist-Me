@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Nova;
+using UnityEngine.SceneManagement;
 
 public class NewDesktopManager : MonoBehaviour
 {
@@ -61,9 +62,15 @@ public class NewDesktopManager : MonoBehaviour
     }
 
     void HandleRezzit(){
+        /*
+        not used
         camFoll.desktopScreen.SetActive(false);
         rezzit.SetActive(true);
         camFoll.UpdatePostProcessingPriority();
+        */
+
+        if(!camFoll.IsDesktopReady) return;
+        SceneManager.LoadScene("Rezzit Scene", LoadSceneMode.Single);
     }
 
     void SetAppActive(bool state){
