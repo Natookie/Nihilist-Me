@@ -7,9 +7,14 @@ public class ImageFileViewer : MonoBehaviour
     public AppGestureHandler root;
     public UIBlock2D imageBlock;
     public TextBlock titleText;
+
+    [Header("META")]
     public TextBlock resolutionText;
     public TextBlock sizeText;
     public TextBlock aspectText;
+
+    [Header("LAYOUT")]
+    public float maxWidth = 600f;
 
     private string resolution;
     private string size;
@@ -19,7 +24,10 @@ public class ImageFileViewer : MonoBehaviour
         if(sprite == null) return;
 
         gameObject.SetActive(true);
+
+        ResizeImageBlock(sprite);
         imageBlock.SetImage(sprite);
+
         if(titleText != null) titleText.Text = fileName;
 
         BuildInfo(sprite);
@@ -29,6 +37,21 @@ public class ImageFileViewer : MonoBehaviour
         if(aspectText != null) aspectText.Text = aspect;
 
         root.Open();
+    }
+
+    void ResizeImageBlock(Sprite sprite){
+        Texture2D tex = sprite.texture;
+
+        float imgW = tex.width;
+        float imgH = tex.height;
+
+        float ratio = imgH / imgW;
+
+        float finalWidth = maxWidth;
+        float finalHeight = finalWidth * ratio;
+
+        imageBlock.Size.X.Value = finalWidth;
+        imageBlock.Size.Y.Value = finalHeight;
     }
 
     void BuildInfo(Sprite sprite){

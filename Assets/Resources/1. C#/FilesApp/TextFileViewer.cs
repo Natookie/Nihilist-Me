@@ -6,6 +6,7 @@ public class TextFileViewer : MonoBehaviour
 {
     [Header("UI")]
     public AppGestureHandler root;
+    public TextBlock titleText;
     public TextBlock fileNameText;
     public TextBlock contentText;
 
@@ -25,6 +26,7 @@ public class TextFileViewer : MonoBehaviour
 
         if(fileNameText != null) fileNameText.Text = fileName;
         if(contentText != null) contentText.Text = textAsset.text;
+        if(titleText != null) titleText.Text = fileName;
 
         BuildMeta(textAsset);
 

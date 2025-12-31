@@ -21,8 +21,6 @@ public class FileOpener : MonoBehaviour
     public void Open(FileItem file){
         if(file == null) return;
 
-        CloseAll();
-
         string folder = GetFolderByType(file.fileType);
         if(string.IsNullOrEmpty(folder)){
             Debug.LogWarning($"[FileOpener] Unsupported file: {file.fileName}");

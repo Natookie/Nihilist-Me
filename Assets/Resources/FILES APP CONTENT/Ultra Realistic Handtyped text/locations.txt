@@ -1,0 +1,7 @@
+boys tents: west side
+showers: east side
+path between: open
+
+no trees
+no corners
+lights on

@@ -22,6 +22,8 @@ public class AppGestureHandler : MonoBehaviour
     public bool canSplit;
     public GameObject fullMode;
     public GameObject splitMode;
+    [Space(5)]
+    public bool disableFullScreen;
 
     const float HIDDEN_Y = -1000f;
     const float DEFAULT_X = 0f;
@@ -64,8 +66,12 @@ public class AppGestureHandler : MonoBehaviour
         Root.AddGestureHandler<Gesture.OnRelease>(OnRelease);
 
         RegisterUtil(minimizeUtil);
-        RegisterUtil(fullUtil);
         RegisterUtil(closeUtil);
+
+        if(!disableFullScreen)
+            RegisterUtil(fullUtil);
+        else
+            DisableFullUtil();
 
         if(canSplit){
             if(fullMode != null) fullMode.SetActive(false);
@@ -86,6 +92,16 @@ public class AppGestureHandler : MonoBehaviour
 
         block.AddGestureHandler<Gesture.OnHover>(e => AnimateUtil(child, 1f));
         block.AddGestureHandler<Gesture.OnUnhover>(e => AnimateUtil(child, 0f));
+    }
+
+    void DisableFullUtil(){
+        if(fullUtil == null) return;
+
+        Interactable interact = fullUtil.GetComponent<Interactable>();
+        if(interact != null) interact.enabled = false;
+
+        UIBlock child = fullUtil.GetChild(0);
+        if(child != null) child.Size.Y.Percent = 0f;
     }
 
     void AnimateUtil(UIBlock target, float to){
@@ -177,6 +193,7 @@ public class AppGestureHandler : MonoBehaviour
     }
 
     void ToggleFullScreen(){
+        if(disableFullScreen) return;
         if(State != AppWindowState.Open) return;
 
         if(!isFullscreen){

@@ -18,8 +18,13 @@ public class FolderRow : MonoBehaviour
     }
 
     void OnPress(Gesture.OnPress evt){
-        if(navigator == null) return;
-        if(targetPanel == null) return;
+        if(navigator == null || targetPanel == null) return;
+
         navigator.OpenPanel(targetPanel);
+        
+        // ✅ Notify FilesApp via singleton
+        if (FilesApp.Instance != null){
+            FilesApp.Instance.OnExternalPanelOpen(targetPanel);
+        }
     }
 }
