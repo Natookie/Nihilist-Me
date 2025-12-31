@@ -86,6 +86,6 @@ public class CloseApp : MonoBehaviour
     }
 
     void LoadDesktop(){
-        SceneManager.LoadScene(desktopSceneName);
+        SceneChangeManager.Instance.ChangeToDesktop();
     }
 }

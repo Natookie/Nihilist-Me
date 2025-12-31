@@ -145,6 +145,15 @@ public class Computer : MonoBehaviour, IInteractable
         else{ if(audioSource.isPlaying) audioSource.Pause(); }
     }
 
+    public void InteractImmediately()
+    {
+        isOpen ^= true;
+        gm.isAnyUiActive = isOpen;
+        chair.ResetRot();
+        chair.Move(isOpen);
+        camFoll.TransistionImmediately();
+    }
+
     public void Interact(){
         isOpen ^= true;
         gm.isAnyUiActive = isOpen;

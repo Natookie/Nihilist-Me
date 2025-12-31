@@ -141,6 +141,48 @@ public class CamFoll : MonoBehaviour
         _transitionRoutine = StartCoroutine(toMonitor ? ZoomToMonitor() : ReturnFromMonitor());
     }
 
+    // Only used for zoom to monitor
+    public void TransistionImmediately()
+    {
+        if(_transitionRoutine != null)
+            StopCoroutine(_transitionRoutine);
+
+        _onMonitor = true;
+
+        Vector3 endPos = monitorTarget.position + Vector3.back;
+        float endFOV = 15f;
+        transform.position = endPos;
+        var lens = vcam.m_Lens;
+        lens.FieldOfView = endFOV;
+        vcam.m_Lens = lens;
+
+        desktopScreen.SetActive(true);
+        UpdatePostProcessingPriority();
+
+        AudioManager.Instance.EnableChannel(AudioChannel.Music, false);
+        AudioManager.Instance.EnableChannel(AudioChannel.Ambience, false);
+        cc.CancelMonologue();
+
+        foreach(Transform child in desktopScreen.transform) child.gameObject.SetActive(true);
+
+        Color end = desktopActiveColor;
+        end.a = 1f;
+        desktopVisual.Color = end;
+        if(crtOverlay) crtOverlay.alpha = 1f;
+        // foreach(Transform child in desktopScreen.transform){
+        //     if(crtOverlay && child == crtOverlay.transform) continue;
+
+        //     _activeFlickers++;
+        //     StartCoroutine(FadeChildTracked(child));
+        // }
+
+        // if(_activeFlickers == 0) _flickerFinished = true;
+
+        _transitionRoutine = null;
+        _isZooming = false;
+        _flickerFinished = true;
+    }
+
     IEnumerator ZoomToMonitor(){
         _isZooming = true;
         _onMonitor = true;
