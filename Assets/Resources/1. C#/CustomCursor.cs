@@ -37,109 +37,161 @@ public class CustomCursor : MonoBehaviour
     public GameObject rezzitScreen;
 
     private Transform lastTarget;
-    bool isOnObj, isTweening, pendingSnap;
+    bool isOnObj, isTweening, isReturning, pendingSnap;
     private float hoverTimer, originalZ;
     private Color currentTargetColor = Color.white;
-    private Coroutine fadeRoutine;
-    private Coroutine colorRoutine;
+
     private Coroutine currentMonologueRoutine;
     private IEnumerator currentTypewriterRoutine;
+    private Coroutine colorRoutine;
 
     Vector3[] origCorners;
-    Quaternion cursorOriginalRot;
+    Quaternion idleRotation;
     Transform[] corners;
+    SpriteRenderer[] cursorRenderers;
+
+    const float CURSOR_Z_OFFSET = .1f;
+
+    Ray ray;
+    RaycastHit2D hit;
+
+    void Awake(){
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.None;
+    }
 
     void Start(){
         corners = new Transform[] { TL, TR, BL, BR };
         origCorners = new Vector3[corners.Length];
-        monologueContainer.alpha = 0f;  
 
         for(int i = 0; i < corners.Length; i++) origCorners[i] = corners[i].localPosition;
 
-        cursorOriginalRot = transform.rotation;
+        idleRotation = transform.rotation;
         originalZ = transform.position.z;
+
+        cursorRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        monologueContainer.alpha = 0f;
 
         SetCursorMaterial(onTopMat);
     }
 
     void Update(){
-        FollowMouse();
         RaycastLogic();
+        HandleHoverTimer();
+        HandleIdleOrSnap();
+        HandleInput();
+        UpdateCursorColor();
+    }
+    void LateUpdate(){
+        FollowMouse();
+    }
 
-        if(pendingSnap && lastTarget != null){
-            hoverTimer += Time.deltaTime;
-            if(hoverTimer >= requiredHoverTime){
-                SnapToObject(lastTarget);
-                pendingSnap = false;
-            }
-        }
+    #region CORE UPDATE SPLITS
+    void HandleHoverTimer(){
+        if(!pendingSnap || lastTarget == null) return;
 
-        if(!isOnObj) RotateIdle();
-        else if(lastTarget != null && !isTweening && lastTarget != null) UpdateObjBounds();
-
-        if(pendingSnap && hoverTimer <= requiredHoverTime){
+        hoverTimer += Time.deltaTime;
+        if(hoverTimer >= requiredHoverTime && !isReturning){
+            SnapToObject(lastTarget);
+            pendingSnap = false;
+        }else{
             ResetCorners(returnSpeed, true);
             if(center) center.gameObject.SetActive(true);
         }
-
-        bool isOnRange = lastTarget != null && isOnObj && Mathf.Abs(playerPos.position.x - lastTarget.position.x) <= 1.5f;
-        if(Input.GetMouseButtonDown(0) && !desktopScreen.activeSelf && !rezzitScreen.activeSelf) HandleInteraction(isOnRange);
-
-        Color cursorColor = GetCursorColor();
-        SetCursorColor(cursorColor);
     }
+
+    void HandleIdleOrSnap(){
+        if(isOnObj && lastTarget != null && !isTweening){
+            UpdateObjBounds();
+            return;
+        }
+
+        if(!isOnObj && !isTweening && !isReturning) RotateIdle();
+    }
+
+    void HandleInput(){
+        if(desktopScreen.activeSelf || rezzitScreen.activeSelf) return;
+        if(!Input.GetMouseButtonDown(0)) return;
+
+        bool isOnRange = (lastTarget != null && Mathf.Abs(playerPos.position.x - lastTarget.position.x) <= 1.5f);
+
+        HandleInteraction(isOnRange);
+    }
+
+    void UpdateCursorColor() => SetCursorColor(GetCursorColor());
+    #endregion
 
     #region OTHERS
     void FollowMouse(){
-        Ray ray = thisCam.ScreenPointToRay(Input.mousePosition);
-        float targetZ = isOnObj && lastTarget != null ? lastTarget.position.z : originalZ;
-        float dist = (targetZ - ray.origin.z) / ray.direction.z;
-        Vector3 world = ray.origin + ray.direction * dist;
+        Vector3 mouse = Input.mousePosition;
 
-        world.z = targetZ;
+        float z = Mathf.Abs(thisCam.transform.position.z) + CURSOR_Z_OFFSET;
+        mouse.z = z;
+
+        Vector3 world = thisCam.ScreenToWorldPoint(mouse);
+        world.z = originalZ + CURSOR_Z_OFFSET;
+
         transform.position = world;
     }
 
     void HandleInteraction(bool isOnRange){
         if(lastTarget == null) return;
-        IMouseInteractable interactObj = lastTarget.gameObject.GetComponent<IMouseInteractable>();
+
+        IMouseInteractable interactObj = lastTarget.GetComponent<IMouseInteractable>();
         if(interactObj == null) return;
 
-        string[] outOfReach = {"Too far.", "Can't reach.", "Need to get closer"};
-        string txt = (isOnRange) ? interactObj.GetMonologue() : outOfReach[Random.Range(0, outOfReach.Length)];
-        
-        if(currentMonologueRoutine != null){
+        string[] outOfReach = { "Too far.", "Can't reach.", "Need to get closer" };
+        string txt = isOnRange
+            ? interactObj.GetMonologue()
+            : outOfReach[Random.Range(0, outOfReach.Length)];
+
+        if(currentMonologueRoutine != null)
             StopCoroutine(currentMonologueRoutine);
-            currentMonologueRoutine = null;
-        }
 
         currentMonologueRoutine = StartCoroutine(FadeMonologue(txt));
-        //SFX
+
         audioSourceUI.pitch = Random.Range(0.95f, 1.05f);
-        if(isOnRange) audioSourceUI.PlayOneShot(clickSFX);
-        else audioSourceUI.PlayOneShot(rejectSFX);
+        audioSourceUI.PlayOneShot(isOnRange ? clickSFX : rejectSFX);
     }
 
     IEnumerator FadeMonologue(string newText){
         if(currentTypewriterRoutine != null){
             StopCoroutine(currentTypewriterRoutine);
-            currentTypewriterRoutine = null;
             monologueText.text = "";
         }
-        
+
         yield return Fade(monologueContainer, 1f, .25f);
-        
+
         monologueText.text = "";
         currentTypewriterRoutine = Typewriter(newText);
         yield return StartCoroutine(currentTypewriterRoutine);
-        
+
         yield return new WaitForSeconds(2.5f);
-        
         yield return Fade(monologueContainer, 0f, .2f);
+
         monologueText.text = "";
-        
         currentMonologueRoutine = null;
         currentTypewriterRoutine = null;
+    }
+
+    public void CancelMonologue(){
+        if(currentMonologueRoutine != null){
+            StopCoroutine(currentMonologueRoutine);
+            currentMonologueRoutine = null;
+        }
+
+        if(currentTypewriterRoutine != null){
+            StopCoroutine(currentTypewriterRoutine);
+            currentTypewriterRoutine = null;
+        }
+
+        if(colorRoutine != null){
+            StopCoroutine(colorRoutine);
+            colorRoutine = null;
+        }
+
+        monologueText.text = "";
+        monologueContainer.alpha = 0f;
     }
 
     IEnumerator Fade(CanvasGroup group, float target, float duration){
@@ -156,54 +208,26 @@ public class CustomCursor : MonoBehaviour
     }
 
     IEnumerator Typewriter(string text){
-        float characterSpeed = .04f;
-        float wordPause = 0f;
-        float sentencePause = .15f;
         monologueText.text = "";
-        
+
         for(int i = 0; i < text.Length; i++){
             monologueText.text += text[i];
-            
-            float delay = characterSpeed;
-            
-            if(text[i] == ',' || text[i] == ';') delay += sentencePause * 0.5f;
-            else if(text[i] == '.' || text[i] == '!' || text[i] == '?') delay += sentencePause;
-            else if(text[i] == ' ' && i + 1 < text.Length && char.IsLetter(text[i + 1])) delay += wordPause;
-            
+
             if(i % 2 == 0){
                 audioSourceSFX.pitch = Random.Range(0.75f, 1.05f);
                 audioSourceSFX.volume = Random.Range(.25f, .45f);
                 audioSourceSFX.PlayOneShot(typeShi);
             }
-            yield return new WaitForSeconds(delay);
-        }
-    }
 
-    public void CancelMonologue(){
-        if(currentMonologueRoutine != null){
-            StopCoroutine(currentMonologueRoutine);
-            currentMonologueRoutine = null;
+            yield return new WaitForSeconds(.04f);
         }
-
-        if(currentTypewriterRoutine != null){
-            StopCoroutine(currentTypewriterRoutine);
-            currentTypewriterRoutine = null;
-        }
-
-        if(fadeRoutine != null){
-            StopCoroutine(fadeRoutine);
-            fadeRoutine = null;
-        }
-
-        monologueText.text = "";
-        monologueContainer.alpha = 0f;
     }
     #endregion
 
-    #region GESTURE LOGIC 
+    #region RAYCAST / SNAP
     void RaycastLogic(){
-        Ray ray = thisCam.ScreenPointToRay(Input.mousePosition);
-        var hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, interactableLayer);
+        ray = thisCam.ScreenPointToRay(Input.mousePosition);
+        hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, interactableLayer);
 
         if(hit.collider && hit.transform != lastTarget) EnterHover(hit.transform);
         else if(!hit.collider && (isOnObj || pendingSnap)) ExitObj();
@@ -220,18 +244,26 @@ public class CustomCursor : MonoBehaviour
     }
 
     void ExitObj(){
-        if(isOnObj){
-            ResetCornerRotation();
-            transform.rotation = cursorOriginalRot;
-        }
+        if(isReturning) return;
 
         isOnObj = false;
         pendingSnap = false;
         hoverTimer = 0f;
         lastTarget = null;
 
-        SetCursorMaterial(onTopMat);
+        isReturning = true;
+        isTweening = true;
+
+        KillCornerTweens();
         ResetCorners(returnSpeed, true);
+
+        DOVirtual.DelayedCall(returnSpeed, () => {
+            transform.rotation = idleRotation;
+            isReturning = false;
+            isTweening = false;
+        });
+
+        SetCursorMaterial(onTopMat);
 
         if(center) center.gameObject.SetActive(true);
     }
@@ -239,82 +271,85 @@ public class CustomCursor : MonoBehaviour
 
     #region SNAP LOGIC
     void SnapToObject(Transform target){
+        if(isReturning) return;
+
         SetCursorMaterial(defaultMat);
         isOnObj = true;
+
         transform.rotation = target.rotation;
         if(center) center.gameObject.SetActive(false);
 
-        ResetCornerRotation();
         StartSnapTween(target);
     }
 
     void StartSnapTween(Transform target){
-        var sr = target.GetComponent<SpriteRenderer>();
+        SpriteRenderer sr = target.GetComponent<SpriteRenderer>();
         if(sr == null || sr.sprite == null) return;
 
         Bounds b = sr.sprite.bounds;
-        Vector3[] worldCorners = new Vector3[]{
-            sr.transform.TransformPoint(new Vector3(b.min.x, b.max.y, 0)), //TL
-            sr.transform.TransformPoint(new Vector3(b.max.x, b.max.y, 0)), //TR
-            sr.transform.TransformPoint(new Vector3(b.min.x, b.min.y, 0)), //BL
-            sr.transform.TransformPoint(new Vector3(b.max.x, b.min.y, 0))  //BR
-        };
 
-        isTweening = true;
-        KillCornerTweens();
-
-        for(int i = 0; i < corners.Length; i++){
-            if(i == 0) corners[i].DOMove(worldCorners[i], goSpeed).OnComplete(() => isTweening = false);
-            else corners[i].DOMove(worldCorners[i], goSpeed);
-        }
-    }
-
-    void PositionCornersToSprite(Transform target, bool tween){
-        var sr = target.GetComponent<SpriteRenderer>();
-        if(sr == null || sr.sprite == null) return;
-
-        Bounds b = sr.sprite.bounds;
-        Vector3[] worldCorners = new Vector3[]{
+        Vector3[] worldCorners = {
             sr.transform.TransformPoint(new Vector3(b.min.x, b.max.y, 0)),
             sr.transform.TransformPoint(new Vector3(b.max.x, b.max.y, 0)),
             sr.transform.TransformPoint(new Vector3(b.min.x, b.min.y, 0)),
             sr.transform.TransformPoint(new Vector3(b.max.x, b.min.y, 0))
         };
 
-        ResetCorners(tween ? returnSpeed : 0, tween, worldCorners);
-    }
-    #endregion  
-
-    #region RESET LOGIC
-    void ResetCorners(float speed, bool tween, Vector3[] positions = null){
-        if(positions == null) positions = origCorners;
+        isTweening = true;
+        KillCornerTweens();
 
         for(int i = 0; i < corners.Length; i++){
-            if(tween) corners[i].DOLocalMove(positions[i], speed);
-            else corners[i].position = positions[i];
+            corners[i].DOMove(worldCorners[i], goSpeed)
+                .SetUpdate(true)
+                .OnComplete(() => isTweening = false);
         }
     }
 
-    void ResetCornerRotation(){
-        KillCornerTweens();
-        foreach(var c in corners) c.localRotation = Quaternion.identity;
-        if(center) center.localRotation = Quaternion.identity;
+    void PositionCornersToSprite(Transform target){
+        if(target == null) return;
+
+        SpriteRenderer sr = target.GetComponent<SpriteRenderer>();
+        if(sr == null || sr.sprite == null) return;
+
+        Bounds b = sr.sprite.bounds;
+
+        Vector3[] worldCorners = {
+            sr.transform.TransformPoint(new Vector3(b.min.x, b.max.y, 0)),
+            sr.transform.TransformPoint(new Vector3(b.max.x, b.max.y, 0)),
+            sr.transform.TransformPoint(new Vector3(b.min.x, b.min.y, 0)),
+            sr.transform.TransformPoint(new Vector3(b.max.x, b.min.y, 0))
+        };
+
+        for(int i = 0; i < corners.Length; i++){
+            corners[i].position = worldCorners[i];
+        }
     }
     #endregion
 
-    #region UTILITY FUNCTION
-    void RotateIdle() => transform.Rotate(0f, 0f, rotateSpeed * Time.deltaTime);
-    void UpdateObjBounds() => PositionCornersToSprite(lastTarget, false);
-    void KillCornerTweens() => System.Array.ForEach(corners, c => c.DOKill());
-    void SetCursorMaterial(Material m) => System.Array.ForEach(GetComponentsInChildren<SpriteRenderer>(), sr => sr.material = m);
+    #region RESET
+    void ResetCorners(float speed, bool tween, Vector3[] positions = null){
+        positions ??= origCorners;
+
+        for(int i = 0; i < corners.Length; i++){
+            if(tween) corners[i].DOLocalMove(positions[i], speed);
+            else corners[i].localPosition = positions[i];
+        }
+    }
     #endregion
 
-    #region COLOR LOGIC
-    Color GetCursorColor(){
-        if(!isOnObj) return Color.white;
+    #region UTILITY
+    void RotateIdle(){transform.Rotate(0f, 0f, rotateSpeed * Time.deltaTime); idleRotation = transform.rotation;}
+    void UpdateObjBounds() => PositionCornersToSprite(lastTarget);
+    void KillCornerTweens() => System.Array.ForEach(corners, c => c.DOKill());
+    void SetCursorMaterial(Material m){foreach(var sr in cursorRenderers) sr.material = m;}
+    #endregion
 
-        bool isOnRange = lastTarget != null && Mathf.Abs(playerPos.position.x - lastTarget.position.x) <= 1.5f;
-        return isOnRange ? Color.cyan : Color.red;
+    #region COLOR
+    Color GetCursorColor(){
+        if(!isOnObj || lastTarget == null) return Color.white;
+
+        bool inRange = Mathf.Abs(playerPos.position.x - lastTarget.position.x) <= 1.5f;
+        return inRange ? Color.cyan : Color.red;
     }
 
     public void SetCursorColor(Color color, float duration = .45f){
@@ -322,37 +357,28 @@ public class CustomCursor : MonoBehaviour
         currentTargetColor = color;
 
         if(colorRoutine != null) StopCoroutine(colorRoutine);
+
         colorRoutine = StartCoroutine(LerpCursorColor(color, duration));
     }
 
     IEnumerator LerpCursorColor(Color target, float duration){
-        List<SpriteRenderer> renderers = new List<SpriteRenderer>();
+        Color[] start = new Color[cursorRenderers.Length];
+        for(int i = 0; i < start.Length; i++)
+            start[i] = cursorRenderers[i].color;
 
-        void Collect(Transform t){
-            if(t == null) return;
-            renderers.AddRange(t.GetComponentsInChildren<SpriteRenderer>(true));
-        }
+        float t = 0f;
+        while(t < duration){
+            t += Time.deltaTime;
+            float a = t / duration;
 
-        Collect(TL);
-        Collect(TR);
-        Collect(BL);
-        Collect(BR);
-        Collect(center);
+            for(int i = 0; i < cursorRenderers.Length; i++) cursorRenderers[i].color = Color.Lerp(start[i], target, a);
 
-        List<Color> startColors = new List<Color>();
-        foreach(var sr in renderers) startColors.Add(sr.color);
-
-        float tLerp = 0f;
-
-        while(tLerp < duration){
-            tLerp += Time.deltaTime;
-            float a = Mathf.Clamp01(tLerp / duration);
-
-            for(int i = 0; i < renderers.Count; i++) renderers[i].color = Color.Lerp(startColors[i], target, a);
             yield return null;
         }
 
-        foreach(var sr in renderers) sr.color = target;
+        foreach(var sr in cursorRenderers)
+            sr.color = target;
+
         colorRoutine = null;
     }
     #endregion
