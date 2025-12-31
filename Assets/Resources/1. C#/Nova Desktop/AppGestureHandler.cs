@@ -1,7 +1,6 @@
 using UnityEngine;
 using Nova;
 using System.Collections;
-using System.Collections.Generic;
 
 public enum AppWindowState
 {
@@ -27,6 +26,7 @@ public class AppGestureHandler : MonoBehaviour
 
     const float HIDDEN_Y = -1000f;
     const float DEFAULT_X = 0f;
+    const float FULLSCREEN_SIZE = .9f;
 
     bool isDragging;
     bool isAnimating;
@@ -42,13 +42,20 @@ public class AppGestureHandler : MonoBehaviour
     Vector3 closedPos;
     Vector3 lastMinimizedPos;
 
+    Interactable _interactable;
+
     public AppWindowState State { get; private set; }
 
-    Dictionary<UIBlock, Coroutine> utilRoutines = new();
+    Coroutine minimizeRoutine;
+    Coroutine closeRoutine;
+    Coroutine fullRoutine;
     Coroutine moveRoutine;
+
+    bool CanInteract => State == AppWindowState.Open && !isAnimating;
 
     void Start(){
         Root ??= GetComponent<UIBlock>();
+        _interactable = Root.GetComponent<Interactable>();
 
         originalPos = Root.Position.Value;
         closedPos = new Vector3(DEFAULT_X, HIDDEN_Y, originalPos.z);
@@ -58,7 +65,7 @@ public class AppGestureHandler : MonoBehaviour
         preFullscreenY = Root.Size.Y;
 
         Root.Position.Value = closedPos;
-        Root.GetComponent<Interactable>().enabled = false;
+        _interactable.enabled = false;
         State = AppWindowState.Closed;
 
         Root.AddGestureHandler<Gesture.OnPress>(OnPress);
@@ -90,25 +97,31 @@ public class AppGestureHandler : MonoBehaviour
             else ToggleFullScreen();
         });
 
-        block.AddGestureHandler<Gesture.OnHover>(e => AnimateUtil(child, 1f));
-        block.AddGestureHandler<Gesture.OnUnhover>(e => AnimateUtil(child, 0f));
+        block.AddGestureHandler<Gesture.OnHover>(e => AnimateUtil(child, 1f, ref GetRoutine(block)));
+        block.AddGestureHandler<Gesture.OnUnhover>(e => AnimateUtil(child, 0f, ref GetRoutine(block)));
+    }
+
+    ref Coroutine GetRoutine(UIBlock2D block){
+        if(block == minimizeUtil) return ref minimizeRoutine;
+        if(block == closeUtil) return ref closeRoutine;
+        return ref fullRoutine;
     }
 
     void DisableFullUtil(){
         if(fullUtil == null) return;
 
-        Interactable interact = fullUtil.GetComponent<Interactable>();
-        if(interact != null) interact.enabled = false;
+        if(fullUtil.TryGetComponent(out Interactable interact))
+            interact.enabled = false;
 
         UIBlock child = fullUtil.GetChild(0);
         if(child != null) child.Size.Y.Percent = 0f;
     }
 
-    void AnimateUtil(UIBlock target, float to){
-        if(utilRoutines.TryGetValue(target, out var r))
-            StopCoroutine(r);
+    void AnimateUtil(UIBlock target, float to, ref Coroutine routine){
+        if(routine != null)
+            StopCoroutine(routine);
 
-        utilRoutines[target] = StartCoroutine(UtilRoutine(target, to));
+        routine = StartCoroutine(UtilRoutine(target, to));
     }
 
     IEnumerator UtilRoutine(UIBlock target, float to){
@@ -130,11 +143,13 @@ public class AppGestureHandler : MonoBehaviour
             return;
         }
 
-        Root.GetComponent<Interactable>().enabled = true;
+        _interactable.enabled = true;
         transform.SetAsLastSibling();
 
-        if(State == AppWindowState.Minimized) MoveTo(lastMinimizedPos, true);
-        else MoveTo(new Vector3(DEFAULT_X, 0f, originalPos.z), true);
+        if(State == AppWindowState.Minimized)
+            MoveTo(lastMinimizedPos, true);
+        else
+            MoveTo(new Vector3(DEFAULT_X, 0f, originalPos.z), true);
 
         State = AppWindowState.Open;
     }
@@ -143,7 +158,7 @@ public class AppGestureHandler : MonoBehaviour
         if(State != AppWindowState.Open) return;
 
         lastMinimizedPos = Root.Position.Value;
-        Root.GetComponent<Interactable>().enabled = false;
+        _interactable.enabled = false;
         State = AppWindowState.Minimized;
 
         MoveTo(closedPos, true);
@@ -152,7 +167,7 @@ public class AppGestureHandler : MonoBehaviour
     public void Close(){
         if(moveRoutine != null) StopCoroutine(moveRoutine);
 
-        Root.GetComponent<Interactable>().enabled = false;
+        _interactable.enabled = false;
         State = AppWindowState.Closed;
 
         Root.Position.Value = closedPos;
@@ -202,8 +217,8 @@ public class AppGestureHandler : MonoBehaviour
             preFullscreenY = Root.Size.Y;
 
             Root.Position.Value = new Vector3(0f, 0f, originalPos.z);
-            Root.Size.X.Percent = .9f;
-            Root.Size.Y.Percent = .9f;
+            Root.Size.X.Percent = FULLSCREEN_SIZE;
+            Root.Size.Y.Percent = FULLSCREEN_SIZE;
 
             if(canSplit){
                 if(splitMode != null) splitMode.SetActive(false);
@@ -226,7 +241,7 @@ public class AppGestureHandler : MonoBehaviour
     }
 
     void OnPress(Gesture.OnPress evt){
-        if(isAnimating || State != AppWindowState.Open) return;
+        if(!CanInteract) return;
 
         transform.SetAsLastSibling();
         isDragging = true;

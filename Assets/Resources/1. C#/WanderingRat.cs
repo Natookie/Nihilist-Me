@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class WanderingRat : MonoBehaviour
 {
     public enum State { Wander, Idle }
@@ -9,6 +10,9 @@ public class WanderingRat : MonoBehaviour
     [Header("WANDER")]
     public float moveSpeed = 2f;
     private float changeDirectionInterval;
+    [Space(5)]
+    public float minX;
+    public float maxX;
 
     [Header("SOUND EFFECT")]
     public AudioSource squeakSource;
@@ -23,6 +27,7 @@ public class WanderingRat : MonoBehaviour
 
     private State currentState = State.Wander;
     private Vector2 moveDirection;
+    private Vector2 targetVelocity;
     private float changeDirectionTimer;
     private float squeakTimer;
     private float nextSqueakTime;
@@ -30,6 +35,9 @@ public class WanderingRat : MonoBehaviour
 
     void Start(){
         ChooseNewDirection();
+        SetVelocity();
+
+        changeDirectionInterval = Random.Range(1.5f, 4f);
         nextSqueakTime = Random.Range(minSqueakInterval, maxSqueakInterval);
     }
 
@@ -39,22 +47,58 @@ public class WanderingRat : MonoBehaviour
         changeDirectionTimer += Time.deltaTime;
 
         if(changeDirectionTimer >= changeDirectionInterval){
-            currentState = (Random.value >= .5f) ? State.Idle : State.Wander;
-            changeDirectionInterval = Random.Range(1.5f, 4f);
-            
-            if(currentState == State.Wander) ChooseNewDirection();
-            else rb.linearVelocity = Vector2.zero;
-
-            changeDirectionTimer = 0f;
+            SwitchState();
         }
 
-        if(currentState == State.Wander) rb.linearVelocity = moveDirection * moveSpeed;
+        if(currentState == State.Wander){
+            HandleBoundaries();
+        }
+    }
+
+    void FixedUpdate(){
+        rb.linearVelocity = targetVelocity;
+    }
+
+    void SwitchState(){
+        currentState = (Random.value >= .5f) ? State.Idle : State.Wander;
+        changeDirectionInterval = Random.Range(1.5f, 4f);
+
+        if(currentState == State.Wander){
+            ChooseNewDirection();
+        }
+
+        SetVelocity();
+        changeDirectionTimer = 0f;
     }
 
     void ChooseNewDirection(){
         bool goRight = (Random.value >= .5f);
-        moveDirection = (goRight) ? Vector2.right : Vector2.left;
+        moveDirection = goRight ? Vector2.right : Vector2.left;
         sr.flipX = !goRight;
+    }
+
+    void SetVelocity(){
+        if(currentState == State.Wander){
+            targetVelocity = moveDirection * moveSpeed;
+        }
+        else{
+            targetVelocity = Vector2.zero;
+        }
+    }
+
+    void HandleBoundaries(){
+        if(transform.position.x < minX && moveDirection.x < 0){
+            SetDirection(Vector2.right);
+        }
+        else if(transform.position.x > maxX && moveDirection.x > 0){
+            SetDirection(Vector2.left);
+        }
+    }
+
+    void SetDirection(Vector2 dir){
+        moveDirection = dir;
+        sr.flipX = dir.x < 0;
+        SetVelocity();
     }
 
     void HandleSqueak(){
@@ -69,7 +113,6 @@ public class WanderingRat : MonoBehaviour
 
             squeakSource.pitch = Random.Range(0.9f, 1.1f);
             squeakSource.volume = squeakVolume;
-
             squeakSource.PlayOneShot(clip);
 
             nextSqueakTime = Random.Range(minSqueakInterval, maxSqueakInterval);

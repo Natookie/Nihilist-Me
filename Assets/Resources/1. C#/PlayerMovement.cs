@@ -9,11 +9,13 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float accelerationTime = .4f;
     public float delayMovement = .25f;
-    private float delayMovementTimer;
 
-    private float resetTime = .15f;
-    private float resetTimer;
-    private float moveX;
+    float delayMovementTimer;
+    float resetTimer;
+    float currentSpeed;
+    float moveX;
+
+    const float RESET_TIME = .15f;
 
     [Header("SLOPE")]
     public Collider2D slopeCheck;
@@ -28,13 +30,10 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip[] woodenFootstepSounds;
     public AudioClip futonFootstepSound;
     public AudioClip woodenCreakingSound;
-    [Range(0f, 1f)]
-    public float baseFootstepVolume = .6f;
-    [Space(10)]
+    [Range(0f, 1f)] public float baseFootstepVolume = .6f;
     public float footstepInterval = .4f;
     public float pitchVariation = .15f;
     public float volumeVariation = .1f;
-
 
     [Header("INTERACTION")]
     public float interactRadius;
@@ -46,69 +45,82 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody2D rb;
     public SpriteRenderer sr;
     public BoxCollider2D futonCollider;
-    private IInteractable currentInteractable;
 
-    private bool isOnFuton;
+    IInteractable currentInteractable;
+    Collider2D[] interactBuffer = new Collider2D[1];
+    Collider2D rbCollider;
 
-    private bool allowToMove;
-    private float currentSpeed;
-    private float footstepTimer = 0f;
-    private bool wasMoving = false;
+    bool isOnFuton;
+    bool allowToMove;
+    bool wasMoving;
+
+    float footstepTimer;
 
     GameManager gm;
 
     void Start(){
         gm = GameManager.Instance;
+        rbCollider = rb.GetComponent<Collider2D>();
         interactPrompt.SetActive(false);
     }
 
     void Update(){
         if(gm.isPaused) return;
-        
+
+        moveX = Input.GetAxisRaw("Horizontal");
+
         HandleInteraction();
         HandleAnim();
         HandleFootsteps();
     }
 
-    void LateUpdate(){
+    void FixedUpdate(){
         HandleMovement();
     }
 
-    bool isMoving() => (Mathf.Abs(rb.linearVelocity.x) > .25f && allowToMove);
     void HandleMovement(){
         if(gm.isAnyUiActive) return;
 
-        moveX = Input.GetAxisRaw("Horizontal");
+        bool wantsToMove = Mathf.Abs(moveX) > .01f;
         Vector2 moveDir = new Vector2(moveX, 0f).normalized;
 
-        bool wantsToMove = Mathf.Abs(moveX) > .01f;
         if(wantsToMove){
             resetTimer = 0f;
-            delayMovementTimer += Time.deltaTime;
+            delayMovementTimer += Time.fixedDeltaTime;
             if(delayMovementTimer >= delayMovement) allowToMove = true;
         }else{
-            resetTimer += Time.deltaTime;
-            if(resetTimer >= resetTime){
+            delayMovementTimer = 0f;
+            resetTimer += Time.fixedDeltaTime;
+            if(resetTimer >= RESET_TIME){
                 allowToMove = false;
-                resetTimer = 0f;
+                currentSpeed = 0f;
             }
         }
 
-        if(allowToMove){
-            currentSpeed = Mathf.MoveTowards(currentSpeed, moveSpeed, Time.deltaTime * (moveSpeed / accelerationTime));
-            rb.linearVelocity = moveDir * currentSpeed;
-
-            if(IsOnSlope() && moveX != 0) rb.linearVelocity = new Vector2(rb.linearVelocity.x, 2f);
-        }else{
-            currentSpeed = 0f;
+        if(!allowToMove){
             rb.linearVelocity = Vector2.zero;
+            return;
         }
+
+        currentSpeed = Mathf.MoveTowards(
+            currentSpeed,
+            moveSpeed,
+            Time.fixedDeltaTime * (moveSpeed / accelerationTime)
+        );
+
+        rb.linearVelocity = moveDir * currentSpeed;
+        if(moveX != 0 && IsOnSlope()) rb.linearVelocity = new Vector2(rb.linearVelocity.x, 2f);
     }
 
     void HandleInteraction(){
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRadius, interactLayer);
-        if(hits.Length > 0){
-            currentInteractable = hits[0].GetComponent<IInteractable>();
+        Collider2D hit = Physics2D.OverlapCircle(
+            transform.position,
+            interactRadius,
+            interactLayer
+        );
+
+        if(hit != null){
+            currentInteractable = hit.GetComponent<IInteractable>();
             interactPrompt.SetActive(true);
             promptText.text = currentInteractable.GetPrompt();
 
@@ -120,76 +132,72 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void HandleAnim(){
-        if(moveX != 0) sr.flipX = (moveX < 0);
-        anim.SetBool("isMoving", isMoving());
+        if(moveX != 0) sr.flipX = moveX < 0;
+        anim.SetBool("isMoving", IsMoving());
     }
 
-   void HandleFootsteps(){
-        bool moving = isMoving();
-        
-        if(moving && !wasMoving) footstepTimer = footstepInterval * 0.5f;
+    bool IsMoving() => allowToMove && Mathf.Abs(rb.linearVelocity.x) > .25f;
+
+    void HandleFootsteps(){
+        bool moving = IsMoving();
+
+        if(moving && !wasMoving) footstepTimer = footstepInterval * .5f;
         if(moving){
             footstepTimer += Time.deltaTime;
-            
             if(footstepTimer >= footstepInterval){
                 PlayFootstep();
                 footstepTimer = 0f;
             }
         }
-        
+
         wasMoving = moving;
+    }
+
+    void PlayFootstep(){
+        if(!footstepSource || footstepSource.isPlaying) return;
+
+        AudioClip clip = isOnFuton ? futonFootstepSound : GetRandomWoodenStep();
+        if(!clip) return;
+
+        footstepSource.pitch = Random.Range(1f - pitchVariation, 1f + pitchVariation);
+        footstepSource.volume = Mathf.Clamp(
+            baseFootstepVolume * Random.Range(1f - volumeVariation, 1f + volumeVariation),
+            0f, 1f
+        );
+
+        footstepSource.PlayOneShot(clip);
+        TryPlayWoodCreak();
     }
 
     AudioClip GetRandomWoodenStep(){
         if(woodenFootstepSounds == null || woodenFootstepSounds.Length == 0) return null;
-
-        int index = Random.Range(0, woodenFootstepSounds.Length);
-        return woodenFootstepSounds[index];
-    }
-
-
-    void PlayFootstep(){
-        if(footstepSource == null) return;
-        if(footstepSource.isPlaying) return;
-
-        AudioClip stepClip = isOnFuton ? futonFootstepSound : GetRandomWoodenStep();
-        if(stepClip == null) return;
-
-        float randomPitch = Random.Range(1f - pitchVariation, 1f + pitchVariation);
-        float randomVolume = baseFootstepVolume * Random.Range(1f - volumeVariation, 1f + volumeVariation);
-
-        footstepInterval = Random.Range(0.2f, 0.3f);
-        footstepSource.pitch = randomPitch;
-        footstepSource.volume = Mathf.Clamp(randomVolume, 0f, 1f);
-
-        footstepSource.PlayOneShot(stepClip);
-        TryPlayWoodCreak();
+        return woodenFootstepSounds[Random.Range(0, woodenFootstepSounds.Length)];
     }
 
     void TryPlayWoodCreak(){
-        if(isOnFuton) return;
-        if(woodenCreakingSound == null) return;
+        if(isOnFuton || !woodenCreakingSound) return;
+        if(Random.value > .15f) return;
 
-        float creakChance = 0.15f;
-        if(Random.value > creakChance) return;
-
-        footstepSource.pitch = Random.Range(0.85f, 0.95f);
-        footstepSource.volume = baseFootstepVolume * Random.Range(0.5f, 0.65f);
-
+        footstepSource.pitch = Random.Range(.85f, .95f);
+        footstepSource.volume = baseFootstepVolume * Random.Range(.5f, .65f);
         footstepSource.PlayOneShot(woodenCreakingSound);
     }
 
     bool IsOnSlope(){
-        Vector2 rayOrigin = sr.bounds.center;
-        rayOrigin.y = sr.bounds.min.y;
-        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, slopeRayDistance, groundLayer);
-        Debug.DrawRay(rayOrigin, Vector2.down * slopeRayDistance, Color.red);
+        if(!IsMoving()) return false;
 
-        return slopeCheck.IsTouching(rb.GetComponent<Collider2D>()) && hit.collider != null;
+        Vector2 origin = sr.bounds.center;
+        origin.y = sr.bounds.min.y;
+
+        return slopeCheck.IsTouching(rbCollider) && Physics2D.Raycast(origin, Vector2.down, slopeRayDistance, groundLayer);
     }
 
-    void OnTriggerEnter2D(Collider2D other){ if(other == futonCollider) isOnFuton = true; }
-    void OnTriggerExit2D(Collider2D other){ if(other == futonCollider) isOnFuton = false; }
+    void OnTriggerEnter2D(Collider2D other){
+        if(other == futonCollider) isOnFuton = true;
+    }
+    void OnTriggerExit2D(Collider2D other){
+        if(other == futonCollider) isOnFuton = false;
+    }
 
     void OnDrawGizmosSelected(){
         Gizmos.color = Color.yellow;

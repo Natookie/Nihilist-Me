@@ -7,7 +7,6 @@ using System.Collections;
 
 public class FilesApp : MonoBehaviour
 {
-    // ✅ Singleton
     public static FilesApp Instance { get; private set; }
 
     [Header("REFERENCES")]
@@ -16,7 +15,7 @@ public class FilesApp : MonoBehaviour
 
     public RowPair[] pinnedChild;
     public RowPair[] tagsChild;
-    public GameObject[] extraPanels; // Drag subfolder panels here
+    public GameObject[] extraPanels;
 
     private Dictionary<GameObject, RowCache> cache = new Dictionary<GameObject, RowCache>();
     private Dictionary<GameObject, PanelCache> panelCache = new Dictionary<GameObject, PanelCache>();
@@ -40,8 +39,8 @@ public class FilesApp : MonoBehaviour
     public Color unhoverBlockColor;
 
     [Header("FILE ITEM COLORS")]
-    public Color32 fileItemHoverColor = new Color32(255, 255, 255, 255);   // Full white, opaque
-    public Color32 fileItemUnhoverColor = new Color32(255, 255, 255, 0);   // Transparent white
+    public Color32 fileItemHoverColor = new Color32(255, 255, 255, 255);
+    public Color32 fileItemUnhoverColor = new Color32(255, 255, 255, 0);
 
     private float arrowRotateDuration = 0.15f;
     private float hoverFadeDuration = 0.12f;
@@ -59,8 +58,7 @@ public class FilesApp : MonoBehaviour
     bool isOpen = false;
 
     void Awake(){
-        // ✅ Singleton setup
-        if (Instance != null && Instance != this){
+        if(Instance != null && Instance != this){
             Destroy(gameObject);
             return;
         }
@@ -90,12 +88,11 @@ public class FilesApp : MonoBehaviour
         }else isOpen = false;
     }
 
-    #region EXTERNAL PANEL HANDLING (for FolderRow)
-    // Called by FolderRow when opening a panel externally
+    #region EXTERNAL PANEL HANDLING
     public void OnExternalPanelOpen(GameObject panel){
         if(panel == null) return;
 
-        DeselectCurrentFileItem(); // ✅ Auto-deselect
+        DeselectCurrentFileItem();
         EnsurePanelCachedAndBindGestures(panel);
     }
 
@@ -104,7 +101,6 @@ public class FilesApp : MonoBehaviour
             UIBlock2D block = activeFileItem.GetComponent<UIBlock2D>();
             if(block != null){
                 block.Color = fileItemUnhoverColor;
-                // ✅ Reset position to base
                 if(fileItemBasePositions.TryGetValue(activeFileItem, out Vector3 basePos)){
                     block.Position.Value = basePos;
                 }
@@ -185,7 +181,7 @@ public class FilesApp : MonoBehaviour
     IEnumerator ChangePanel(RowPair row){
         yield return new WaitForSeconds(.01f);
         if(activeRow != row){
-            DeselectCurrentFileItem(); // ✅ Auto-deselect
+            DeselectCurrentFileItem();
 
             Scroller scroller = row.childPanel.GetComponent<Scroller>();
             scroller.ScrollToIndex(0, false);
