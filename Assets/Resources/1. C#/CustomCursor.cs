@@ -20,7 +20,8 @@ public class CustomCursor : MonoBehaviour
     public CanvasGroup monologueContainer;
 
     [Header("MATERIALS")]
-    public Material onTopMat, defaultMat;
+    public Material onTopMat;
+    public Material defaultMat;
 
     [Header("SOUND EFFECT")]
     public AudioSource audioSourceUI;
@@ -38,6 +39,8 @@ public class CustomCursor : MonoBehaviour
 
     private Transform lastTarget;
     bool isOnObj, isTweening, isReturning, pendingSnap;
+    bool _allowMovement = true;
+    bool isRepositioning = false;
     private float hoverTimer, originalZ;
     private Color currentTargetColor = Color.white;
 
@@ -45,6 +48,7 @@ public class CustomCursor : MonoBehaviour
     private IEnumerator currentTypewriterRoutine;
     private Coroutine colorRoutine;
 
+    Vector3 _lockedMousePos;
     Vector3[] origCorners;
     Quaternion idleRotation;
     Transform[] corners;
@@ -76,6 +80,7 @@ public class CustomCursor : MonoBehaviour
     }
 
     void Update(){
+        if(!_allowMovement) return;
         RaycastLogic();
         HandleHoverTimer();
         HandleIdleOrSnap();
@@ -83,6 +88,7 @@ public class CustomCursor : MonoBehaviour
         UpdateCursorColor();
     }
     void LateUpdate(){
+        if(!_allowMovement || isRepositioning) return;
         FollowMouse();
     }
 
@@ -123,7 +129,7 @@ public class CustomCursor : MonoBehaviour
 
     #region OTHERS
     void FollowMouse(){
-        Vector3 mouse = Input.mousePosition;
+        Vector3 mouse = (_allowMovement) ? Input.mousePosition : _lockedMousePos;
 
         float z = Mathf.Abs(thisCam.transform.position.z) + CURSOR_Z_OFFSET;
         mouse.z = z;
@@ -145,8 +151,7 @@ public class CustomCursor : MonoBehaviour
             ? interactObj.GetMonologue()
             : outOfReach[Random.Range(0, outOfReach.Length)];
 
-        if(currentMonologueRoutine != null)
-            StopCoroutine(currentMonologueRoutine);
+        if(currentMonologueRoutine != null) StopCoroutine(currentMonologueRoutine);
 
         currentMonologueRoutine = StartCoroutine(FadeMonologue(txt));
 
@@ -312,7 +317,6 @@ public class CustomCursor : MonoBehaviour
         if(sr == null || sr.sprite == null) return;
 
         Bounds b = sr.sprite.bounds;
-
         Vector3[] worldCorners = {
             sr.transform.TransformPoint(new Vector3(b.min.x, b.max.y, 0)),
             sr.transform.TransformPoint(new Vector3(b.max.x, b.max.y, 0)),
@@ -320,9 +324,7 @@ public class CustomCursor : MonoBehaviour
             sr.transform.TransformPoint(new Vector3(b.max.x, b.min.y, 0))
         };
 
-        for(int i = 0; i < corners.Length; i++){
-            corners[i].position = worldCorners[i];
-        }
+        for(int i = 0; i < corners.Length; i++) corners[i].position = worldCorners[i];
     }
     #endregion
 
@@ -342,6 +344,38 @@ public class CustomCursor : MonoBehaviour
     void UpdateObjBounds() => PositionCornersToSprite(lastTarget);
     void KillCornerTweens() => System.Array.ForEach(corners, c => c.DOKill());
     void SetCursorMaterial(Material m){foreach(var sr in cursorRenderers) sr.material = m;}
+
+    public void SetMovementEnabled(bool enabled){
+        if(_allowMovement == enabled) return;
+        _allowMovement = enabled;
+
+        if(!enabled) _lockedMousePos = Input.mousePosition;
+        else{
+            Vector3 mouse = _lockedMousePos;
+            float z = Mathf.Abs(thisCam.transform.position.z) + CURSOR_Z_OFFSET;
+            mouse.z = z;
+
+            Vector3 world = thisCam.ScreenToWorldPoint(mouse);
+            world.z = originalZ + CURSOR_Z_OFFSET;
+
+            StartCoroutine(SmoothReposition(world, 0.15f));
+        }
+    }
+    IEnumerator SmoothReposition(Vector3 targetPosition, float duration){
+        isRepositioning = true;
+        Vector3 startPos = transform.position;
+        float elapsed = 0f;
+
+        while(elapsed < duration){
+            elapsed += Time.deltaTime;
+            float t = Mathf.Min(elapsed / duration, 1f);
+            transform.position = Vector3.Lerp(startPos, targetPosition, t);
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        isRepositioning = false;
+    }
     #endregion
 
     #region COLOR
@@ -363,8 +397,7 @@ public class CustomCursor : MonoBehaviour
 
     IEnumerator LerpCursorColor(Color target, float duration){
         Color[] start = new Color[cursorRenderers.Length];
-        for(int i = 0; i < start.Length; i++)
-            start[i] = cursorRenderers[i].color;
+        for(int i = 0; i < start.Length; i++) start[i] = cursorRenderers[i].color;
 
         float t = 0f;
         while(t < duration){
@@ -376,9 +409,7 @@ public class CustomCursor : MonoBehaviour
             yield return null;
         }
 
-        foreach(var sr in cursorRenderers)
-            sr.color = target;
-
+        foreach(var sr in cursorRenderers) sr.color = target;
         colorRoutine = null;
     }
     #endregion

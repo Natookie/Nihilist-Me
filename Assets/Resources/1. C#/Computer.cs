@@ -6,10 +6,10 @@ public class Computer : MonoBehaviour, IInteractable
 {
     [Header("ANIMATION")]
     public Renderer screenRender;
-    public float minCRTEmission = 0.6f;
+    public float minCRTEmission = .6f;
     public float maxCRTEmission = 1.2f;
-    public float pulseSpeed = 0.4f;
-    public float noiseSpeed = 0.8f;
+    public float pulseSpeed = .4f;
+    public float noiseSpeed = .8f;
     [Space(10)]
     public Renderer greenRender;
     public Renderer redRender;
@@ -17,8 +17,8 @@ public class Computer : MonoBehaviour, IInteractable
     public float maxOrnamentIntensity = 2.5f;
 
     [Header("SUBTLE VARIATION")]
-    public float scanIntensityVariance = 0.05f;
-    public float lineDensityVariance = 0.03f;
+    public float scanIntensityVariance = .05f;
+    public float lineDensityVariance = .03f;
 
     float noiseOffset;
 
@@ -76,7 +76,7 @@ public class Computer : MonoBehaviour, IInteractable
     void AnimateScreen(){
         if(screenMat == null) return;
 
-        float pulse = Mathf.Sin(Time.time * pulseSpeed) * 0.5f + 0.5f;
+        float pulse = Mathf.Sin(Time.time * pulseSpeed) * .5f + .5f;
 
         float noise = Mathf.PerlinNoise(
             Time.time * noiseSpeed,
@@ -90,12 +90,12 @@ public class Computer : MonoBehaviour, IInteractable
 
         screenMat.SetFloat(
             "_ScanIntensity",
-            1f + (noise - 0.5f) * scanIntensityVariance
+            1f + (noise - .5f) * scanIntensityVariance
         );
 
         screenMat.SetFloat(
             "_LineDensity",
-            1f + (pulse - 0.5f) * lineDensityVariance
+            1f + (pulse - .5f) * lineDensityVariance
         );
     }
 
@@ -104,9 +104,9 @@ public class Computer : MonoBehaviour, IInteractable
 
         float time = Time.time;
 
-        float greenPulse = Mathf.Sin(time * (pulseSpeed * 0.6f)) * 0.5f + 0.5f;
+        float greenPulse = Mathf.Sin(time * (pulseSpeed * .6f)) * .5f + .5f;
         float greenNoise = Mathf.PerlinNoise(
-            time * (noiseSpeed * 0.5f),
+            time * (noiseSpeed * .5f),
             noiseOffset + 10f
         );
 
@@ -114,13 +114,13 @@ public class Computer : MonoBehaviour, IInteractable
 
         float greenEmission = Mathf.Lerp(
             minOrnamentIntensity,
-            maxOrnamentIntensity * 0.7f,
+            maxOrnamentIntensity * .7f,
             greenT
         );
 
         greenMat.SetColor("_EmissionColor", baseGreenEmission * greenEmission);
 
-        float redPulse = Mathf.Sin(time * (pulseSpeed * 0.9f) + 1.3f) * 0.5f + 0.5f;
+        float redPulse = Mathf.Sin(time * (pulseSpeed * .9f) + 1.3f) * .5f + .5f;
         float redNoise = Mathf.PerlinNoise(
             time * noiseSpeed,
             noiseOffset + 37f
@@ -129,7 +129,7 @@ public class Computer : MonoBehaviour, IInteractable
         float redT = Mathf.Clamp01(redPulse * redNoise);
 
         float redEmission = Mathf.Lerp(
-            minOrnamentIntensity * 0.8f,
+            minOrnamentIntensity * .8f,
             maxOrnamentIntensity,
             redT
         );
@@ -153,6 +153,8 @@ public class Computer : MonoBehaviour, IInteractable
         chair.Move(isOpen);
         camFoll.TransistionImmediately();
     }
+
+    public bool CanInteract() => true;
 
     public void Interact(){
         isOpen ^= true;

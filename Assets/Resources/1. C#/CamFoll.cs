@@ -24,7 +24,7 @@ public class CamFoll : MonoBehaviour
     [Header("DESKTOP TRANSITION")]
     public Transform monitorTarget;
     public float zoomDuration = 1f;
-    public float uiFadeDuration = 0.5f;
+    public float uiFadeDuration = .5f;
 
     [Header("DESKTOP REFERENCES")]
     public GameObject desktopScreen;
@@ -62,6 +62,10 @@ public class CamFoll : MonoBehaviour
 
     float _targetFOV;
     float _currentXOffset;
+    const float CAM_Z_EPSILON = .02f;
+
+    Vector3 _monitorZoomEndPos;
+    bool _lockToMonitorOrigin;
 
     bool _isZooming;
     bool _onMonitor;
@@ -72,6 +76,7 @@ public class CamFoll : MonoBehaviour
 
     public bool IsDesktopFXDone => _flickerFinished;
     public bool IsDesktopReady => _flickerFinished && !_isZooming && _onMonitor;
+    bool IsCameraAtFollowZ => Mathf.Abs(transform.position.z - fixedZ) <= CAM_Z_EPSILON;
 
     void Start(){
         fixedY = transform.position.y;
@@ -79,6 +84,12 @@ public class CamFoll : MonoBehaviour
         _targetFOV = vcam.m_Lens.FieldOfView;
 
         if(desktopScreen == null) return;
+        if(desktopTargetRenderer != null){
+            Texture2D savedScreenshot = Resources.Load<Texture2D>("2. Art/Desktop/" + System.IO.Path.GetFileNameWithoutExtension(screenshotFileName));
+            
+            if(savedScreenshot != null) desktopTargetRenderer.material.SetTexture("_MainTex", savedScreenshot);
+            else desktopTargetRenderer.material.SetTexture("_MainTex", null);
+        }
 
         desktopScreen.SetActive(false);
 
@@ -92,17 +103,30 @@ public class CamFoll : MonoBehaviour
     }
 
     void LateUpdate(){
-        if(_isZooming || desktopScreen.activeSelf) return;
+        if(_lockToMonitorOrigin){
+            transform.position = new Vector3(0f, 0f, -.1f);
+            return;
+        }
+        if(_isZooming){
+            cc.SetMovementEnabled(false);
+            return;
+        }
+        if(!_onMonitor && IsAtDefaultPosition()) cc.SetMovementEnabled(true);
+        if(desktopScreen.activeSelf) return;
 
         HandleMouseX();
         HandleCamPos();
         HandleZoom();
+
+        if(desktopScreen != null && desktopScreen.activeSelf){
+            if(Time.unscaledDeltaTime > 0.02f) Debug.LogWarning($"[Performance Spike] Frame time: {Time.unscaledDeltaTime * 1000:F1}ms while desktop is active");
+        }
     }
 
     #region CAMERA FOLLOW
     void HandleMouseX(){
         Vector3 mouseView = worldCam.ScreenToViewportPoint(Input.mousePosition);
-        float centeredX = Mathf.Clamp((mouseView.x - 0.5f) * 2f, -1f, 1f);
+        float centeredX = Mathf.Clamp((mouseView.x - .5f) * 2f, -1f, 1f);
 
         float desiredOffset = centeredX * maxXOffset;
         float t = 1f - Mathf.Exp(-followSmooth * Time.deltaTime);
@@ -122,71 +146,43 @@ public class CamFoll : MonoBehaviour
 
     void HandleZoom(){
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if(Mathf.Abs(scroll) > 0.0001f)
+        if(Mathf.Abs(scroll) > .0001f)
             _targetFOV = Mathf.Clamp(_targetFOV - scroll * zoomSpeed, minFOV, maxFOV);
 
         var lens = vcam.m_Lens;
         lens.FieldOfView = Mathf.Lerp(lens.FieldOfView, _targetFOV, fovSmoothSpeed * Time.deltaTime);
         vcam.m_Lens = lens;
     }
+
+    bool IsAtDefaultPosition(){
+        Vector3 target = new Vector3(
+            player.position.x + _currentXOffset,
+            fixedY,
+            fixedZ
+        );
+
+        return Vector3.SqrMagnitude(transform.position - target) < .0004f;
+    }
     #endregion
 
     #region DESKTOP TRANSITION
     public void StartTransition(bool toMonitor){
-        if(_onMonitor == toMonitor || rezzitScreen.activeSelf) return;
+        if(rezzitScreen.activeSelf) return;
+        if(toMonitor && (_isZooming || !IsCameraAtFollowZ)) return;
+        if(!toMonitor && !IsDesktopReady) return;
+        if(_onMonitor == toMonitor) return;
 
-        if(_transitionRoutine != null)
-            StopCoroutine(_transitionRoutine);
-
+        if(_transitionRoutine != null) StopCoroutine(_transitionRoutine);
         _transitionRoutine = StartCoroutine(toMonitor ? ZoomToMonitor() : ReturnFromMonitor());
-    }
-
-    // Only used for zoom to monitor
-    public void TransistionImmediately()
-    {
-        if(_transitionRoutine != null)
-            StopCoroutine(_transitionRoutine);
-
-        _onMonitor = true;
-
-        Vector3 endPos = monitorTarget.position + Vector3.back;
-        float endFOV = 15f;
-        transform.position = endPos;
-        var lens = vcam.m_Lens;
-        lens.FieldOfView = endFOV;
-        vcam.m_Lens = lens;
-
-        desktopScreen.SetActive(true);
-        UpdatePostProcessingPriority();
-
-        AudioManager.Instance.EnableChannel(AudioChannel.Music, false);
-        AudioManager.Instance.EnableChannel(AudioChannel.Ambience, false);
-        cc.CancelMonologue();
-
-        foreach(Transform child in desktopScreen.transform) child.gameObject.SetActive(true);
-
-        Color end = desktopActiveColor;
-        end.a = 1f;
-        desktopVisual.Color = end;
-        if(crtOverlay) crtOverlay.alpha = 1f;
-        // foreach(Transform child in desktopScreen.transform){
-        //     if(crtOverlay && child == crtOverlay.transform) continue;
-
-        //     _activeFlickers++;
-        //     StartCoroutine(FadeChildTracked(child));
-        // }
-
-        // if(_activeFlickers == 0) _flickerFinished = true;
-
-        _transitionRoutine = null;
-        _isZooming = false;
-        _flickerFinished = true;
     }
 
     IEnumerator ZoomToMonitor(){
         _isZooming = true;
         _onMonitor = true;
         _flickerFinished = false;
+        _lockToMonitorOrigin = false;
+
+        cc.SetMovementEnabled(false);
 
         Vector3 startPos = transform.position;
         Vector3 endPos = monitorTarget.position + Vector3.back;
@@ -196,7 +192,9 @@ public class CamFoll : MonoBehaviour
 
         yield return ZoomRoutine(startPos, endPos, startFOV, endFOV);
 
+        _monitorZoomEndPos = endPos;
         desktopScreen.SetActive(true);
+        //Debug.Log($"[Desktop] Screen ENABLED at {Time.time:F2}s");
         UpdatePostProcessingPriority();
 
         audioSource.PlayOneShot(chimeSFX);
@@ -207,22 +205,27 @@ public class CamFoll : MonoBehaviour
         foreach(Transform child in desktopScreen.transform) child.gameObject.SetActive(true);
         yield return FadeDesktop(true);
 
+        _lockToMonitorOrigin = true;
         _transitionRoutine = null;
         _isZooming = false;
+
+        //Debug.Log($"[Desktop] Fully READY at {Time.time:F2}s");
     }
 
     IEnumerator ReturnFromMonitor(){
         _isZooming = true;
         _onMonitor = false;
         _flickerFinished = false;
+        _lockToMonitorOrigin = false;
         CaptureCurrentView();
 
         yield return FadeDesktop(false);
 
         desktopScreen.SetActive(false);
+        //Debug.Log($"[Desktop] Screen DISABLED at {Time.time:F2}s");
         UpdatePostProcessingPriority();
 
-        Vector3 startPos = transform.position;
+        Vector3 startPos = _monitorZoomEndPos;
         Vector3 endPos = new Vector3(player.position.x + _currentXOffset, fixedY, fixedZ);
         float startFOV = vcam.m_Lens.FieldOfView;
         float endFOV = _targetFOV;
@@ -249,6 +252,47 @@ public class CamFoll : MonoBehaviour
             yield return null;
         }
     }
+
+    public void TransistionImmediately(){
+        if(_transitionRoutine != null) StopCoroutine(_transitionRoutine);
+
+        _onMonitor = true;
+
+        Vector3 endPos = monitorTarget.position + Vector3.back;
+        float endFOV = 15f;
+
+        transform.position = endPos;
+        _monitorZoomEndPos = monitorTarget.position + Vector3.back;
+        _lockToMonitorOrigin = true;
+
+        transform.position = new Vector3(0f, 0f, .1f);
+
+        var lens = vcam.m_Lens;
+        lens.FieldOfView = endFOV;
+        vcam.m_Lens = lens;
+
+        desktopScreen.SetActive(true);
+        Debug.Log($"[Desktop] Screen ENABLED (immediate) at {Time.time:F2}s");
+        UpdatePostProcessingPriority();
+
+        AudioManager.Instance.EnableChannel(AudioChannel.Music, false);
+        AudioManager.Instance.EnableChannel(AudioChannel.Ambience, false);
+        cc.CancelMonologue();
+
+        foreach(Transform child in desktopScreen.transform) child.gameObject.SetActive(true);
+
+        Color end = desktopActiveColor;
+        end.a = 1f;
+        desktopVisual.Color = end;
+
+        if(crtOverlay) crtOverlay.alpha = 1f;
+
+        _transitionRoutine = null;
+        _isZooming = false;
+        _flickerFinished = true;
+
+        Debug.Log($"[Desktop] Fully READY (immediate) at {Time.time:F2}s");
+    }
     #endregion
 
     #region UI FADES
@@ -274,6 +318,28 @@ public class CamFoll : MonoBehaviour
 
         foreach(Transform child in desktopScreen.transform){
             if(crtOverlay && child == crtOverlay.transform) continue;
+            if(disableDesktopFlicker){
+                UIBlock2D[] blocks = child.GetComponentsInChildren<UIBlock2D>(true);
+                TextBlock[] texts = child.GetComponentsInChildren<TextBlock>(true);
+
+                foreach(var b in blocks){
+                    Color c = b.Color;
+                    c.a = desktopActiveColor.a;
+                    b.Color = c;
+
+                    Color s = b.Shadow.Color;
+                    s.a = c.a;
+                    b.Shadow.Color = s;
+                }
+
+                foreach(var txt in texts){
+                    Color c = txt.Color;
+                    c.a = 1f;
+                    txt.Color = c;
+                }
+
+                continue;
+            }
 
             _activeFlickers++;
             StartCoroutine(FadeChildTracked(child));
@@ -291,20 +357,51 @@ public class CamFoll : MonoBehaviour
     IEnumerator FadeChild(Transform child){
         if(child == null) yield break;
 
-        UIBlock2D[] blocks = child.GetComponentsInChildren<UIBlock2D>(true);
-        TextBlock[] texts = child.GetComponentsInChildren<TextBlock>(true);
+        UIBlock2D[] allBlocks = child.GetComponentsInChildren<UIBlock2D>(true);
+        TextBlock[] allTexts = child.GetComponentsInChildren<TextBlock>(true);
 
-        float total = Random.Range(0.8f, 1.4f);
+        List<UIBlock2D> blocks = new List<UIBlock2D>();
+        List<TextBlock> texts = new List<TextBlock>();
+
+        List<float> blockBaseAlpha = new List<float>();
+        List<float> textBaseAlpha  = new List<float>();
+
+        foreach(var b in allBlocks){
+            if(b.Color.a <= 0f) continue;
+            blocks.Add(b);
+            blockBaseAlpha.Add(b.Color.a);
+        }
+
+        foreach(var t in allTexts){
+            if(t.Color.a <= 0f) continue;
+            texts.Add(t);
+            textBaseAlpha.Add(t.Color.a);
+        }
+
+        if(blocks.Count == 0 && texts.Count == 0) yield break;
+
+        float total = Random.Range(.8f, 1.4f);
         float elapsed = 0f;
 
         while(elapsed < total){
-            float target = Random.value > 0.5f ? 1f : 0f;
-            float speed = Random.Range(0.05f, 0.15f);
-            yield return FadeElements(blocks, texts, target, speed);
+            float target = Random.value > .5f ? 1f : 0f;
+            float speed = Random.Range(.05f, .15f);
+            yield return FadeElements(
+                blocks.ToArray(),
+                texts.ToArray(),
+                target,
+                speed
+            );
             elapsed += speed;
         }
 
-        yield return FadeElements(blocks, texts, 1f, 0.2f);
+        yield return FadeElementsRestore(
+            blocks.ToArray(),
+            texts.ToArray(),
+            blockBaseAlpha.ToArray(),
+            textBaseAlpha.ToArray(),
+            .2f
+        );
     }
 
     IEnumerator FadeElements(UIBlock2D[] blocks, TextBlock[] texts, float targetAlpha, float duration){
@@ -326,6 +423,31 @@ public class CamFoll : MonoBehaviour
                 Color c = txt.Color;
                 c.a = Mathf.Lerp(c.a, targetAlpha, t);
                 txt.Color = c;
+            }
+
+            yield return null;
+        }
+    }
+
+    IEnumerator FadeElementsRestore(UIBlock2D[] blocks, TextBlock[] texts, float[] blockAlpha, float[] textAlpha, float duration){
+        float t = 0f;
+
+        while(t < 1f){
+            t += Time.deltaTime / duration;
+
+            for(int i = 0; i < blocks.Length; i++){
+                Color c = blocks[i].Color;
+                Color s = blocks[i].Shadow.Color;
+                c.a = Mathf.Lerp(c.a, blockAlpha[i], t);
+                s.a = c.a;
+                blocks[i].Color = c;
+                blocks[i].Shadow.Color = s;
+            }
+
+            for(int i = 0; i < texts.Length; i++){
+                Color c = texts[i].Color;
+                c.a = Mathf.Lerp(c.a, textAlpha[i], t);
+                texts[i].Color = c;
             }
 
             yield return null;
@@ -395,6 +517,7 @@ public class CamFoll : MonoBehaviour
 
         byte[] png = tex.EncodeToPNG();
         System.IO.File.WriteAllBytes(fullPath, png);
+
         if(desktopTargetRenderer != null) desktopTargetRenderer.material.SetTexture("_MainTex", tex);
 
     #if UNITY_EDITOR
@@ -402,12 +525,3 @@ public class CamFoll : MonoBehaviour
     #endif
     }
 }
-
-/*
-================= OLD DESKTOP SYSTEM (DISABLED) =================
-- computerCanvas fade logic
-- non-CRT desktop UI
-- isUsingNewDesktop checks
-- bonnie blue makan spageti depan embassy indonesia
-================================================================
-*/

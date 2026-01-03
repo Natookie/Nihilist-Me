@@ -11,6 +11,8 @@ using System.IO;
 
 public class OnlineDebateManager : MonoBehaviour
 {
+    public static OnlineDebateManager Instance { get; private set; }
+
     [Header("OLLAMA")]
     public string ollamaURL = "http://127.0.0.1:11434/api/generate";
     public string model = "mistral";
@@ -90,6 +92,11 @@ public class OnlineDebateManager : MonoBehaviour
     private const int MAX_MESSAGES = 50;
 
     public bool isDebateActive;
+    static public bool isDebateEnded => Instance != null && Instance.currentState == DebateState.DebateEnded;
+
+    // Win lose count
+    [HideInInspector] static public int winCount = 0;
+    [HideInInspector] static public int loseCount = 0;
 
     [System.Serializable]
     public class ConversationEntry{
@@ -107,6 +114,13 @@ public class OnlineDebateManager : MonoBehaviour
     }
 
     void Awake(){
+        if(Instance != null && Instance != this){
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         if(qualityEvaluator == null) qualityEvaluator = new ResponseQualityEvaluator();
         if(debateLogger == null) debateLogger = new FileDebateLogger(generateLog: generateLog, logDirectory: "");
     }
@@ -229,13 +243,17 @@ public class OnlineDebateManager : MonoBehaviour
     public void EndDebate(string reason){
         currentState = DebateState.DebateEnded;
         StopAllCoroutines();
-
-        cachedEndReason = reason;
-        cachedPerformanceSummary = GetPerformanceSummary();
-
-        InstantiateCommentPrefab(systemCommentPrefab, reason, Role.System);
+        UpdateWinLoseCount();
 
         if(generateLog) debateLogger.EndDebate(reason, cachedPerformanceSummary);
+    }
+    void UpdateWinLoseCount(){
+        if(averageScore >= 10f && consecutivePoorResponses < maxPoorResponses) winCount++;
+        else loseCount++;
+    }
+    static public void ResetWinloseCount(){
+        winCount = 0;
+        loseCount = 0;
     }
     #endregion
 

@@ -32,9 +32,8 @@ public class SleepingMat : MonoBehaviour, IInteractable
     public TextMeshProUGUI recapText;
 
     public int dayCount = 1;
-    private int winCount;
     private bool isSleeping;
-    [HideInInspector] public bool ending3;
+    public bool ending3;
 
     private GameManager gm;
 
@@ -86,8 +85,10 @@ public class SleepingMat : MonoBehaviour, IInteractable
         gm.isAnyUiActive = false;
     }
     int DecideEnding(){
-        if(ending3) return 2;
-        return (winCount >= 2) ? 0 : 1;
+        if(OnlineDebateManager.winCount >= 2) return 0; // "Lost cause"
+        if(OnlineDebateManager.loseCount >= 2) return 1; // "Black"
+        if(ending3) return 2; // "This is the end."
+        return 0;
     }
 
     IEnumerator EyeLidClose() => LerpLidHeight(0f, maxHeight, closeDuration, false);
@@ -122,5 +123,9 @@ public class SleepingMat : MonoBehaviour, IInteractable
         bottomLid.sizeDelta = new Vector2(bottomStart.x, height);
     }
 
-    public string GetPrompt() => "Go to Sleep";
+    public bool CanInteract(){
+        return OnlineDebateManager.isDebateEnded;
+    }
+
+    public string GetPrompt() => "Doze Off";
 }

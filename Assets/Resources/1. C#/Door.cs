@@ -14,6 +14,9 @@ public class Door : MonoBehaviour, IInteractable
     public float fadeSpeed = 1.5f;
     public float cooldownTime = 600f;
 
+    [Header("REFERENCE")]
+    public SleepingMat sleepingMat;
+
     private bool playerInside;
     private bool isPlaying;
     private bool onCD;
@@ -95,8 +98,12 @@ public class Door : MonoBehaviour, IInteractable
         fadeRoutine = null;
     }
 
+    public bool CanInteract(){
+        return sleepingMat.ending3;
+    }
+
     public void Interact(){
-        // intentional
+        //TODO: Cutscene
     }
 
     public string GetPrompt() => "Escape.";
