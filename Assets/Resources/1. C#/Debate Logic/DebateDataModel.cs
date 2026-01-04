@@ -24,3 +24,20 @@ public class JudgeScore
     public int total_score;
     public string feedback;
 }
+
+[Serializable]
+public class ConversationEntry
+{
+    public string speaker;
+    public string message;
+    public string fallacyUsed;
+    public int score;
+
+    public ConversationEntry(string speaker, string message, string fallacyUsed = "", int score = 0)
+    {
+        this.speaker = speaker;
+        this.message = message;
+        this.fallacyUsed = fallacyUsed;
+        this.score = score;
+    }
+}

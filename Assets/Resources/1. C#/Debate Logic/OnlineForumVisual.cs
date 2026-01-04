@@ -21,13 +21,16 @@ public class OnlineForumVisual : MonoBehaviour
     public UIBlock2D SearchIcon;
     public Sprite[] searchState = new Sprite[2];
     public Sprite[] loadingState = new Sprite[4];
-    public TextBlock headerTextField;
 
     [Header("REPLY TEXT FIELD")]
     public UIBlock2D replyTextField;
     public TextBlock replyPlaceholder;
     public TextBlock replyFill;
     public UIBlock2D replySendButton;
+
+    [Header("HEADER TEXT FIELDS")]
+    public TextBlock titleHeader;
+    public TextBlock titleOpening;
 
     [Header("OVERLAYS")]
     public GameObject GridOverlayObject;
@@ -41,16 +44,18 @@ public class OnlineForumVisual : MonoBehaviour
     public GameObject HomeScreen;
 
     [Header("REFERENCES")]
-    public OnlineDebateManager debateManager;
+    public OnlineDebateManager debateUIManager;
     public DictionaryManager dictionaryManager;
-
+    
+    private DebateDataManager debateDataManager;
     private UIBlock2D gridOverlay;
     private TextBlock topicTextBlock;
 
     private bool isTopicFocused = false;
-    private bool isLoading = false;
     private bool isReplyTextFieldFocused = false;
-    private bool isDebateInitialize = false;
+    
+    private bool isTopicLoading = false;
+    private Coroutine loadingCoroutine;
 
     private string headerFallacy = "";
     private string starterHeader;
@@ -58,14 +63,15 @@ public class OnlineForumVisual : MonoBehaviour
 
     #region INITIALIZATION
     void Start(){
+        debateDataManager = DebateDataManager.Instance;
         gridOverlay = GridOverlayObject.GetComponent<UIBlock2D>();
         topicTextBlock = topicTextField.GetChild(0).GetComponent<TextBlock>();
 
         originalColors = new Color32[decorativeBlocks.Length];
         for(int i = 0; i < decorativeBlocks.Length; i++) originalColors[i] = decorativeBlocks[i].Color;
 
-        starterHeader = debateManager.titleHeader.Text;
-        starterOpening = debateManager.titleOpening.Text;
+        starterHeader = titleHeader.Text;
+        starterOpening = titleOpening.Text;
 
         //Topic section
         RegisterTopicButton(randomTopic);
@@ -87,8 +93,11 @@ public class OnlineForumVisual : MonoBehaviour
         replySendButton.Color = new Color32(171, 64, 65, 200);
         replySendButton.Gradient.Color = new Color32(202, 78, 64, 191);
 
-        if(debateManager.isDebateActive) EnableReplyTextField();
-        else DisableReplyTextField();
+        StopAllCoroutines();
+        isTopicLoading = false;
+        
+        EnableTopicTextField();
+        DisableReplyTextField();
     }
 
     void RegisterTopicButton(UIBlock2D block){
@@ -111,17 +120,19 @@ public class OnlineForumVisual : MonoBehaviour
     }
 
     void RegisterSendButton(UIBlock2D block){
-        block.AddGestureHandler<Gesture.OnPress>(e => debateManager.SendReply());
+        block.AddGestureHandler<Gesture.OnPress>(e => debateUIManager.SendReply());
         block.AddGestureHandler<Gesture.OnHover>(e => {
-            block.Color = new Color32(151, 44, 45, 200);
-            block.Gradient.Color = new Color32(242, 98, 84, 191);
+            if(IsSendButtonEnabled()){
+                block.Color = new Color32(151, 44, 45, 200);
+                block.Gradient.Color = new Color32(242, 98, 84, 191);
+            }
         });
         block.AddGestureHandler<Gesture.OnUnhover>(e => {
-            block.Color = new Color32(171, 64, 65, 200);
-            block.Gradient.Color = new Color32(202, 78, 64, 191);
+            if(IsSendButtonEnabled()){
+                block.Color = new Color32(171, 64, 65, 200);
+                block.Gradient.Color = new Color32(202, 78, 64, 191);
+            }
         });
-        
-        if(!debateManager.isDebateActive) block.GetComponent<Interactable>().enabled = false;
     }
     #endregion
 
@@ -132,20 +143,34 @@ public class OnlineForumVisual : MonoBehaviour
         HandleManualScroll();
 
         if(!HomeScreen.activeSelf) return;
-        HandleSendButton();
-
+        
+        UpdateUIState();
+        
         if(Input.GetMouseButtonDown(0)){
-            topicTextField.Border.Enabled = isTopicFocused;
-            replyTextField.Border.Enabled = isReplyTextFieldFocused;
+            topicTextField.Border.Enabled = isTopicFocused && !debateDataManager.isDebateActive;
+            replyTextField.Border.Enabled = isReplyTextFieldFocused && debateDataManager.isDebateActive;
         }
 
-        if(debateManager.isDebateActive){
-            HandleTopicTextField();
-            if(isTopicOnLoad()) DisableReplyTextField();
-            else EnableReplyTextField();
+        if(!debateDataManager.isDebateActive) FilterTopicTextField();
+    }
+
+    void UpdateUIState(){
+        if(!debateDataManager.isDebateActive){
+            if(isTopicLoading){
+                DisableTopicTextField();
+                DisableReplyTextField();
+            }else{
+                EnableTopicTextField();
+                DisableReplyTextField();
+            }
         }else{
-            DisableReplyTextField();
-            FilterTopicTextField();
+            DisableTopicTextField();
+            EnableReplyTextField();
+            
+            if(isTopicLoading){
+                isTopicLoading = false;
+                StopLoadingAnimation();
+            }
         }
     }
     #endregion
@@ -182,73 +207,10 @@ public class OnlineForumVisual : MonoBehaviour
             block.Color = (Color32)newColor;
         }
     }
-
-    void HandleSendButton(){
-        if(isDebateInitialize) return;
-
-        if(isTopicOnLoad() || !debateManager.isDebateActive){
-            replySendButton.Color = new Color32(52, 39, 38, 200);
-            replySendButton.Gradient.Color = new Color32(52, 35, 35, 191);
-
-            var it = replySendButton.GetComponent<Interactable>();
-            if(it != null) it.enabled = false;
-
-            if(replySendButton.transform.childCount > 0){
-                var child = replySendButton.GetChild(0);
-                if(child != null) child.Color = new Color32(104, 70, 70, 200);
-            }
-        }else{
-            replySendButton.Color = new Color32(171, 64, 65, 200);
-            replySendButton.Gradient.Color = new Color32(242, 98, 84, 191);
-
-            var it = replySendButton.GetComponent<Interactable>();
-            if(it != null) it.enabled = true;
-
-            if(replySendButton.transform.childCount > 0){
-                var child = replySendButton.GetChild(0);
-                if(child != null) child.Color = new Color32(255, 255, 255, 200);
-            }
-
-            isDebateInitialize = true;
-        }
-    }
     #endregion
 
-    #region TOPIC TEXT FIELD
-    bool isTopicOnLoad() => string.IsNullOrEmpty(headerTextField.Text) || headerTextField.Text == "";
-
-    void HandleTopicTextField(){
-        if(isTopicOnLoad()){
-            SearchIcon.Color = Color.white;
-            if(!isLoading){
-                isLoading = true;
-                StartCoroutine(AnimateLoadingIcon());
-            }
-            return;
-        }
-
-        if(isLoading){
-            StopAllCoroutines();
-            isLoading = false;
-        }
-
-        //Disable search
-        SearchIcon.Color = new Color32(148, 148, 148, 200);
-        SearchIcon.SetImage(searchState[1]);
-
-        topicTextField.Border.Enabled = false;
-        topicTextField.Color = new Color32(58, 43, 42, 200);
-
-        var interactable = topicTextField.GetComponent<Interactable>();
-        if(interactable != null) interactable.enabled = false;
-
-        var textField = topicTextField.GetComponent<TextField>();
-        if(textField != null) textField.enabled = false;
-    }
-
+    #region TOPIC TEXT FIELD METHODS
     public void EnableTopicTextField(){
-        if(topicTextField == null) return;
-
         var interactable = topicTextField.GetComponent<Interactable>();
         if(interactable != null) interactable.enabled = true;
 
@@ -263,22 +225,47 @@ public class OnlineForumVisual : MonoBehaviour
             SearchIcon.SetImage(searchState.Length > 0 ? searchState[0] : null);
         }
 
-        if(isLoading){
-            StopAllCoroutines();
-            isLoading = false;
-        }
+        StopLoadingAnimation();
+    }
 
-        debateManager.titleHeader.Text = starterHeader;
-        debateManager.titleOpening.Text = starterOpening;
-        DisableReplyTextField();
-        isDebateInitialize = false;
+    public void DisableTopicTextField(){
+        var interactable = topicTextField.GetComponent<Interactable>();
+        if(interactable != null) interactable.enabled = false;
+
+        var textField = topicTextField.GetComponent<TextField>();
+        if(textField != null) textField.enabled = false;
+
+        topicTextField.Color = new Color32(58, 43, 42, 200);
+        topicTextField.Border.Enabled = false;
+    }
+
+    public void StartLoadingAnimation(){
+        isTopicLoading = true;
+        if(loadingCoroutine != null) StopCoroutine(loadingCoroutine);
+        loadingCoroutine = StartCoroutine(AnimateLoadingIcon());
+    }
+
+    public void StopLoadingAnimation(){
+        isTopicLoading = false;
+        if(loadingCoroutine != null){
+            StopCoroutine(loadingCoroutine);
+            loadingCoroutine = null;
+        }
+        
+        if(SearchIcon != null){
+            SearchIcon.Color = new Color32(148, 148, 148, 200);
+            SearchIcon.SetImage(searchState[1]);
+        }
     }
 
     IEnumerator AnimateLoadingIcon(){
         int frame = 0;
 
         while(true){
-            SearchIcon.SetImage(loadingState[frame]);
+            if(SearchIcon != null && loadingState.Length > 0){
+                SearchIcon.Color = Color.white;
+                SearchIcon.SetImage(loadingState[frame]);
+            }
             yield return new WaitForSeconds(.075f);
             frame = (frame + 1) % loadingState.Length;
         }
@@ -292,16 +279,16 @@ public class OnlineForumVisual : MonoBehaviour
         if(string.IsNullOrEmpty(raw)) return;
 
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        foreach(char c in raw)
-            if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-                sb.Append(c);
+        foreach(char c in raw){
+            if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) sb.Append(c);
+        }
 
         string clean = sb.ToString();
         if(clean != raw) tf.Text = clean;
     }
     #endregion
 
-    #region REPLY TEXT FIELD
+    #region REPLY TEXT FIELD METHODS
     void EnableReplyTextField(){
         var interactable = replyTextField.GetComponent<Interactable>();
         if(interactable != null) interactable.enabled = true;
@@ -309,6 +296,14 @@ public class OnlineForumVisual : MonoBehaviour
         replyPlaceholder.Color = new Color32(128, 128, 128, 100);
         replyTextField.Color = new Color32(51, 51, 51, 200);
         replyPlaceholder.Text = "Enter an argument...";
+
+        if(replySendButton != null){
+            var sendInteractable = replySendButton.GetComponent<Interactable>();
+            if(sendInteractable != null) {
+                sendInteractable.enabled = true;
+                UpdateSendButtonAppearance(true);
+            }
+        }
     }
 
     void DisableReplyTextField(){
@@ -318,12 +313,44 @@ public class OnlineForumVisual : MonoBehaviour
         replyPlaceholder.Color = new Color32(150, 100, 100, 100);
         replyTextField.Color = new Color32(58, 43, 42, 200);
         replyPlaceholder.Text = "Create or find a topic first";
+        
+        if(replySendButton != null){
+            var sendInteractable = replySendButton.GetComponent<Interactable>();
+            if(sendInteractable != null) {
+                sendInteractable.enabled = false;
+                UpdateSendButtonAppearance(false);
+            }
+        }
+    }
+
+    bool IsSendButtonEnabled() => debateDataManager != null && debateDataManager.isDebateActive;
+
+    void UpdateSendButtonAppearance(bool enabled){
+        if(replySendButton == null) return;
+        
+        if(enabled){
+            replySendButton.Color = new Color32(171, 64, 65, 200);
+            replySendButton.Gradient.Color = new Color32(242, 98, 84, 191);
+            
+            if(replySendButton.transform.childCount > 0){
+                var child = replySendButton.GetChild(0);
+                if(child != null) child.Color = new Color32(255, 255, 255, 200);
+            }
+        }else{
+            replySendButton.Color = new Color32(52, 39, 38, 200);
+            replySendButton.Gradient.Color = new Color32(52, 35, 35, 191);
+            
+            if(replySendButton.transform.childCount > 0){
+                var child = replySendButton.GetChild(0);
+                if(child != null) child.Color = new Color32(104, 70, 70, 200);
+            }
+        }
     }
     #endregion
 
     public void SetChosenFallacy(string fallacy) => headerFallacy = fallacy;
 
-    #region REPLY TEXT FIELD
+    #region REPLY TEXT FIELD SCROLL
     void HandleManualScroll(){
         float parentWidth = replyTextField.Size.X.Value;
         float childWidth = replyFill.Size.X.Value;

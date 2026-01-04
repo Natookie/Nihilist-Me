@@ -85,8 +85,11 @@ public class SleepingMat : MonoBehaviour, IInteractable
         gm.isAnyUiActive = false;
     }
     int DecideEnding(){
-        if(OnlineDebateManager.winCount >= 2) return 0; // "Lost cause"
-        if(OnlineDebateManager.loseCount >= 2) return 1; // "Black"
+        int winCount = (DebateDataManager.Instance != null) ? DebateDataManager.Instance.winCount : 0;
+        int loseCount = (DebateDataManager.Instance != null) ? DebateDataManager.Instance.loseCount : 0;
+
+        if(winCount >= 2) return 0; // "Lost cause"
+        if(loseCount >= 2) return 1; // "Black"
         if(ending3) return 2; // "This is the end."
         return 0;
     }
@@ -124,7 +127,7 @@ public class SleepingMat : MonoBehaviour, IInteractable
     }
 
     public bool CanInteract(){
-        return OnlineDebateManager.isDebateEnded;
+        return DebateDataManager.Instance != null && DebateDataManager.Instance.currentState == DebateDataManager.DebateState.DebateEnded;
     }
 
     public string GetPrompt() => "Doze Off";

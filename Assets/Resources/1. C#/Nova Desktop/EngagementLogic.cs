@@ -277,7 +277,7 @@ public class EngagementLogic : MonoBehaviour
             notificationPart[2].transform.GetChild(1).GetComponent<TextBlock>().Text = "Debate started";
             notificationPart[2].transform.GetChild(2).GetComponent<TextBlock>().Text = $"Topic: {topicWord}";
         }else{
-            string msg = debateManager.currentOpponentName;
+            string msg = (DebateDataManager.Instance != null) ? DebateDataManager.Instance.currentOpponentName : "AI Opponent";
             notificationPart[1].transform.GetChild(1).GetComponent<TextBlock>().Text = $"{msg} replied to you";
         }
 
