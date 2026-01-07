@@ -35,7 +35,6 @@ public class CustomCursor : MonoBehaviour
     public Transform playerPos;
     [Space(10)]
     public GameObject desktopScreen;
-    public GameObject rezzitScreen;
 
     private Transform lastTarget;
     bool isOnObj, isTweening, isReturning, pendingSnap;
@@ -116,7 +115,7 @@ public class CustomCursor : MonoBehaviour
     }
 
     void HandleInput(){
-        if(desktopScreen.activeSelf || rezzitScreen.activeSelf) return;
+        if(desktopScreen.activeSelf) return;
         if(!Input.GetMouseButtonDown(0)) return;
 
         bool isOnRange = (lastTarget != null && Mathf.Abs(playerPos.position.x - lastTarget.position.x) <= 1.5f);

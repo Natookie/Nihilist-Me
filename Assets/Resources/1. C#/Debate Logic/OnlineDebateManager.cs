@@ -12,7 +12,6 @@ using UnityEngine.SceneManagement;
 
 public class OnlineDebateManager : MonoBehaviour
 {
-    #region UI REFERENCES
     [Header("UI REFERENCES")]
     public TextBlock topicTextField;
     public TextBlock titleHeader;
@@ -28,40 +27,30 @@ public class OnlineDebateManager : MonoBehaviour
     public GameObject systemCommentPrefab;
     public Transform chatContainer;
     public Scroller scroller;
-    #endregion
 
-    #region REFERENCES
     [Header("REFERENCES")]
     public EngagementLogic engagementLogic;
     public DictionaryManager dictionaryManager;
     public DebateNetwork network;
-    #endregion
 
-    #region AUTO COMPLETE
     [Header("AUTO COMPLETE")]
     public bool autoComplete = false;
     public string autoTopic = "hotdog";
     public string[] autoReplies;
     private bool isFirstAutoTurn = true;
     private int currentAutoReplyIndex = 0;
-    #endregion
 
-    #region LOCAL CONFIG OVERRIDES
     [Header("LOCAL CONFIG OVERRIDES")]
     public string localOllamaURL = "";
     public string localModel = "";
     public int localMaxTurns = -1;
     public int localMaxPoorResponses = -1;
-    #endregion
 
-    #region PRIVATE FIELDS
     private IResponseQualityEvaluator qualityEvaluator;
     private IDebateLogger debateLogger;
     private string lastDisplayedPerformance = "";
     private const int MAX_MESSAGES = 50;
-    #endregion
 
-    #region ENUMS & CONSTANTS
     private enum Role { Player, Enemy, System }
     private const string DEFAULT_HEADER_TEXT = "Welcome to our AI demo.";
     private const string DEFAULT_OPENING_TEXT = 
@@ -70,9 +59,7 @@ public class OnlineDebateManager : MonoBehaviour
         "3. After each reply, an AI judge scores you.\n" +
         "The AI opponent adapts: smart replies earn serious debate, weak ones trigger mockery or early termination after 3 consecutive poor responses.\n" +
         "4. The debate lasts up to 10 turns, but can end sooner.";
-    #endregion
 
-    #region UNITY LIFECYCLE
     void Awake(){
         if(qualityEvaluator == null) qualityEvaluator = new ResponseQualityEvaluator();
         if(debateLogger == null) debateLogger = new FileDebateLogger(
@@ -109,7 +96,6 @@ public class OnlineDebateManager : MonoBehaviour
         if(!DebateDataManager.Instance.isDebateActive) SendTopic();
         else SendReply();
     }
-    #endregion
 
     #region SCENE MANAGEMENT
     void OnSceneLoaded(Scene scene, LoadSceneMode mode){
@@ -122,7 +108,6 @@ public class OnlineDebateManager : MonoBehaviour
     }
     #endregion
 
-    #region CONFIGURATION
     void ApplyLocalOverrides(){
         if(DebateDataManager.Instance == null) return;
         if(!string.IsNullOrEmpty(localOllamaURL)) DebateDataManager.Instance.ollamaURL = localOllamaURL;
@@ -130,7 +115,6 @@ public class OnlineDebateManager : MonoBehaviour
         if(localMaxTurns > 0) DebateDataManager.Instance.maxTurns = localMaxTurns;
         if(localMaxPoorResponses > 0) DebateDataManager.Instance.maxPoorResponses = localMaxPoorResponses;
     }
-    #endregion
 
     #region UI DATA MANAGEMENT
     void LoadDataIntoUI(){

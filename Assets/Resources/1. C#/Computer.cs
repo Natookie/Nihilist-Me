@@ -29,6 +29,7 @@ public class Computer : MonoBehaviour, IInteractable
     [Header("REFERENCES")]
     public CamFoll camFoll;
     public Chair chair;
+    public Console console;
     GameManager gm;
 
     bool isOpen = false;
@@ -145,8 +146,7 @@ public class Computer : MonoBehaviour, IInteractable
         else{ if(audioSource.isPlaying) audioSource.Pause(); }
     }
 
-    public void InteractImmediately()
-    {
+    public void InteractImmediately(){
         isOpen ^= true;
         gm.isAnyUiActive = isOpen;
         chair.ResetRot();
@@ -157,6 +157,8 @@ public class Computer : MonoBehaviour, IInteractable
     public bool CanInteract() => true;
 
     public void Interact(){
+        if(isOpen && console.IsOnFocus()) return;
+
         isOpen ^= true;
         gm.isAnyUiActive = isOpen;
         camFoll.StartTransition(isOpen);

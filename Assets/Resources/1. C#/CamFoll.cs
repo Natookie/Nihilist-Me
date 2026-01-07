@@ -28,7 +28,6 @@ public class CamFoll : MonoBehaviour
 
     [Header("DESKTOP REFERENCES")]
     public GameObject desktopScreen;
-    public GameObject rezzitScreen;
     public UIBlock2D desktopVisual;
     public Color desktopActiveColor = Color.white;
     public CanvasGroup crtOverlay;
@@ -36,7 +35,6 @@ public class CamFoll : MonoBehaviour
     [Header("POST PROCESSING")]
     public Volume roomVolume;
     public Volume desktopVolume;
-    public Volume rezzitVolume;
 
     [Header("SOUND EFFECT")]
     public AudioSource audioSource;
@@ -167,7 +165,6 @@ public class CamFoll : MonoBehaviour
 
     #region DESKTOP TRANSITION
     public void StartTransition(bool toMonitor){
-        if(rezzitScreen.activeSelf) return;
         if(toMonitor && (_isZooming || !IsCameraAtFollowZ)) return;
         if(!toMonitor && !IsDesktopReady) return;
         if(_onMonitor == toMonitor) return;
@@ -457,14 +454,6 @@ public class CamFoll : MonoBehaviour
 
     #region POST PROCESSING
     public void UpdatePostProcessingPriority(){
-        if(rezzitScreen.activeSelf){
-            roomVolume.priority = 0;
-            desktopVolume.priority = 0;
-            rezzitVolume.priority = 20;
-            return;
-        }
-
-        rezzitVolume.priority = 0;
         roomVolume.priority = desktopScreen.activeSelf ? 0 : 20;
         desktopVolume.priority = desktopScreen.activeSelf ? 20 : 0;
     }
