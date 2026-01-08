@@ -46,12 +46,21 @@ public class AudioManager : MonoBehaviour
     void Start(){
         sources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
         if(backgroundMusic != null){
-            if(musicGroup != null)
-                backgroundMusic.outputAudioMixerGroup = musicGroup;
+            if(musicGroup != null) backgroundMusic.outputAudioMixerGroup = musicGroup;
 
             backgroundMusic.loop = true;
             backgroundMusic.Play();
             SetVolume(AudioChannel.Music, 1f);
+        }
+    }
+
+    void Update(){
+        //Get all enabled audio channels
+        if(Input.GetKeyDown(KeyCode.Z)){
+            Debug.Log($"[AudioManager] Music Enabled: {musicEnabled}");
+            Debug.Log($"[AudioManager] SFX Enabled: {sfxEnabled}");
+            Debug.Log($"[AudioManager] Ambience Enabled: {ambienceEnabled}");
+            Debug.Log($"[AudioManager] UI Enabled: {uiEnabled}");
         }
     }
 

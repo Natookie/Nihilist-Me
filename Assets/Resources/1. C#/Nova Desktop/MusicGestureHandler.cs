@@ -55,6 +55,7 @@ public class MusicGestureHandler : MonoBehaviour
 
         BindIcon(MusicSetting[0], MusicView.Visuals as MusicVisual);
         PrepareAudio(MusicSetting[0]);
+        ResetAll();
     }
 
     void BindIcon(MusicSetting setting, MusicVisual visual){
@@ -65,6 +66,32 @@ public class MusicGestureHandler : MonoBehaviour
         visual.iconImage.SetImage(setting.musicIcon);
     }
 
+    void ResetAll(){
+        //Reset Next button
+        nextBlock.Gradient.Enabled = false;
+        Next.transform.localScale = Vector3.one;
+        if(nextScaleRoutine != null){
+            StopCoroutine(nextScaleRoutine);
+            nextScaleRoutine = null;
+        }
+        
+        //Reset Prev button
+        prevBlock.Gradient.Enabled = false;
+        Prev.transform.localScale = Vector3.one;
+        if(prevScaleRoutine != null){
+            StopCoroutine(prevScaleRoutine);
+            prevScaleRoutine = null;
+        }
+        
+        //Reset Play button
+        playBlock.Gradient.Enabled = false;
+        Play.transform.localScale = Vector3.one;
+        if(playScaleRoutine != null){
+            StopCoroutine(playScaleRoutine);
+            playScaleRoutine = null;
+        }
+    }
+
     void PrepareAudio(MusicSetting setting){
         if(setting == null || setting.musicClip == null) return;
         audioSource.clip = setting.musicClip;
@@ -72,20 +99,20 @@ public class MusicGestureHandler : MonoBehaviour
 
     void PlayCurrent(){
         if(audioSource.clip == null) return;
-        audioSource.Play();
+        
+        if(audioSource.time > 0) audioSource.UnPause();
+        else audioSource.Play();
+        
         isPlaying = true;
         UpdatePlayIcon();
 
-        if(durationRoutine != null) StopCoroutine(durationRoutine);
-        durationRoutine = StartCoroutine(AnimateDurationBar());
+        if(durationRoutine == null) durationRoutine = StartCoroutine(AnimateDurationBar());
     }
 
     void PauseCurrent(){
         audioSource.Pause();
         isPlaying = false;
         UpdatePlayIcon();
-
-        if(durationRoutine != null) StopCoroutine(durationRoutine);
     }
 
     void UpdatePlayIcon(){
@@ -97,13 +124,21 @@ public class MusicGestureHandler : MonoBehaviour
     void ChangeMusic(int index){
         if(index < 0 || index >= MusicSetting.Length) return;
 
+        if(durationRoutine != null){
+            StopCoroutine(durationRoutine);
+            durationRoutine = null;
+        }
+
+        durationBar.Size.X.Value = 0f;
         musicIndex = index;
 
         BindIcon(MusicSetting[musicIndex], MusicView.Visuals as MusicVisual);
         PrepareAudio(MusicSetting[musicIndex]);
 
-        if(isPlaying)
+        if(isPlaying){
             audioSource.Play();
+            durationRoutine = StartCoroutine(AnimateDurationBar());
+        }
     }
 
     IEnumerator ScaleTo(Transform target, float scale){

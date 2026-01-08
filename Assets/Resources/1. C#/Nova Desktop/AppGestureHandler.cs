@@ -31,6 +31,7 @@ public class AppGestureHandler : MonoBehaviour
     bool isDragging;
     bool isAnimating;
     public bool isFullscreen;
+    bool isAnOpener;
 
     Vector3 preFullscreenPos;
     Length preFullscreenX;
@@ -43,6 +44,7 @@ public class AppGestureHandler : MonoBehaviour
     Vector3 lastMinimizedPos;
 
     Interactable _interactable;
+    DesktopAudioManager audioManager;
 
     public AppWindowState State { get; private set; }
 
@@ -55,6 +57,7 @@ public class AppGestureHandler : MonoBehaviour
 
     void Start(){
         Root ??= GetComponent<UIBlock>();
+        audioManager = DesktopAudioManager.Instance;
         _interactable = Root.GetComponent<Interactable>();
 
         originalPos = Root.Position.Value;
@@ -75,15 +78,15 @@ public class AppGestureHandler : MonoBehaviour
         RegisterUtil(minimizeUtil);
         RegisterUtil(closeUtil);
 
-        if(!disableFullScreen)
-            RegisterUtil(fullUtil);
-        else
-            DisableFullUtil();
+        if(!disableFullScreen) RegisterUtil(fullUtil);
+        else DisableFullUtil();
 
         if(canSplit){
             if(fullMode != null) fullMode.SetActive(false);
             if(splitMode != null) splitMode.SetActive(true);
         }
+
+        isAnOpener = this.gameObject.name.Contains("Opener");
     }
 
     void RegisterUtil(UIBlock2D block){
@@ -92,9 +95,16 @@ public class AppGestureHandler : MonoBehaviour
         UIBlock child = block.GetChild(0);
 
         block.AddGestureHandler<Gesture.OnPress>(e => {
-            if(block == minimizeUtil) Minimize();
-            else if(block == closeUtil) Close();
-            else ToggleFullScreen();
+            if(block == minimizeUtil){
+                Minimize();
+                audioManager.PlaySound(audioManager.minimizeSound);
+            }else if(block == closeUtil){
+                audioManager.PlaySound(audioManager.closeSound);
+                Close();
+            }else{
+                audioManager.PlaySound(audioManager.maximizeSound);
+                ToggleFullScreen();
+            }
         });
 
         block.AddGestureHandler<Gesture.OnHover>(e => AnimateUtil(child, 1f, ref GetRoutine(block)));
@@ -110,16 +120,13 @@ public class AppGestureHandler : MonoBehaviour
     void DisableFullUtil(){
         if(fullUtil == null) return;
 
-        if(fullUtil.TryGetComponent(out Interactable interact))
-            interact.enabled = false;
-
+        if(fullUtil.TryGetComponent(out Interactable interact)) interact.enabled = false;
         UIBlock child = fullUtil.GetChild(0);
         if(child != null) child.Size.Y.Percent = 0f;
     }
 
     void AnimateUtil(UIBlock target, float to, ref Coroutine routine){
-        if(routine != null)
-            StopCoroutine(routine);
+        if(routine != null) StopCoroutine(routine);
 
         routine = StartCoroutine(UtilRoutine(target, to));
     }
@@ -139,17 +146,24 @@ public class AppGestureHandler : MonoBehaviour
 
     public void Open(){
         if(State == AppWindowState.Open){
+            if(isAnOpener && transform.parent != null) transform.parent.SetAsLastSibling();
             transform.SetAsLastSibling();
             return;
         }
 
         _interactable.enabled = true;
+        if(isAnOpener && transform.parent != null) transform.parent.SetAsLastSibling();
         transform.SetAsLastSibling();
 
-        if(State == AppWindowState.Minimized)
-            MoveTo(lastMinimizedPos, true);
-        else
-            MoveTo(new Vector3(DEFAULT_X, 0f, originalPos.z), true);
+        if(State == AppWindowState.Minimized) MoveTo(lastMinimizedPos, true);
+        else{
+            audioManager.PlaySound(audioManager.openSound);
+            float randomOffsetX = Random.Range(-50f, 50f);
+            float randomOffsetY = Random.Range(-30f, 30f);
+
+            Vector3 openPos = new Vector3(DEFAULT_X + randomOffsetX, randomOffsetY, originalPos.z);
+            MoveTo(openPos, true);
+        }
 
         State = AppWindowState.Open;
     }
@@ -180,7 +194,6 @@ public class AppGestureHandler : MonoBehaviour
 
     void MoveTo(Vector3 target, bool smooth){
         if(moveRoutine != null) StopCoroutine(moveRoutine);
-
         if(smooth) moveRoutine = StartCoroutine(MoveRoutine(target));
         else Root.Position.Value = target;
     }
@@ -243,7 +256,9 @@ public class AppGestureHandler : MonoBehaviour
     void OnPress(Gesture.OnPress evt){
         if(!CanInteract) return;
 
+        if(isAnOpener && transform.parent != null) transform.parent.SetAsLastSibling();
         transform.SetAsLastSibling();
+
         isDragging = true;
         lastMousePos = Input.mousePosition;
     }

@@ -163,8 +163,7 @@ public class DesktopIconGestureHandler : MonoBehaviour
             StartCoroutine(SlideBackAndRestore(
                 Camera.main.WorldToScreenPoint(closest.position)
             ));
-        }
-        else{
+        }else{
             StartCoroutine(SlideBackAndRestore(pressedIconOriginalScreenPos));
         }
     }

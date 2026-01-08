@@ -227,6 +227,7 @@ public class CamFoll : MonoBehaviour
         float startFOV = vcam.m_Lens.FieldOfView;
         float endFOV = _targetFOV;
 
+        Debug.Log("return");
         AudioManager.Instance.EnableChannel(AudioChannel.Music, true);
         AudioManager.Instance.EnableChannel(AudioChannel.Ambience, true);
 
