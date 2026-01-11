@@ -56,12 +56,14 @@ public class AudioManager : MonoBehaviour
 
     void Update(){
         //Get all enabled audio channels
+        /*
         if(Input.GetKeyDown(KeyCode.Z)){
             Debug.Log($"[AudioManager] Music Enabled: {musicEnabled}");
             Debug.Log($"[AudioManager] SFX Enabled: {sfxEnabled}");
             Debug.Log($"[AudioManager] Ambience Enabled: {ambienceEnabled}");
             Debug.Log($"[AudioManager] UI Enabled: {uiEnabled}");
         }
+        */
     }
 
     public bool CanPlay(AudioChannel channel){

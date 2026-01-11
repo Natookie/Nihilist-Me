@@ -6,6 +6,9 @@ public class PlayerFadeController : MonoBehaviour
     [Header("PLAYER FADE")]
     public float playerFadeStartDistance = 5f;
     public float playerFadeEndDistance = .3f;
+    [Space(10)]
+    public Material playerDefaultMat;
+    public Material playerHackedMat;
 
     [Header("CURSOR FADE")]
     public float cursorFadeStartDistance = 8f;
@@ -22,12 +25,19 @@ public class PlayerFadeController : MonoBehaviour
     static readonly int PlayerColorID = Shader.PropertyToID("_BaseColor");
     static readonly int CursorColorID = Shader.PropertyToID("_Color");
 
+    private GameManager gm;
+
     void Awake(){
         _playerMat = sr.material;
         if(cursorMaterial != null) _cursorBaseColor = cursorMaterial.GetColor(CursorColorID);
     }
+    void Start(){
+        if(gm == null) gm = GameManager.Instance;
+        UpdateMaterial();
+    }
 
     void LateUpdate(){
+        bool materialChanged = UpdateMaterial();
         float camZ = cam.transform.position.z;
         float playerZ = transform.position.z;
         float dist = Mathf.Abs(camZ - playerZ);
@@ -37,6 +47,17 @@ public class PlayerFadeController : MonoBehaviour
 
         ApplyPlayerAlpha(playerAlpha);
         ApplyCursorAlpha(cursorAlpha);
+    }
+
+    bool UpdateMaterial(){
+        Material targetMat = (gm.isPaused) ? playerDefaultMat : playerHackedMat;
+        
+        if(sr.material != targetMat && targetMat != null){
+            sr.material = targetMat;
+            _playerMat = sr.material;
+            return true;
+        }
+        return false;
     }
 
     void ApplyPlayerAlpha(float alpha){

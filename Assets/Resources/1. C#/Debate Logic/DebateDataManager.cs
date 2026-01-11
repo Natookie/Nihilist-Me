@@ -49,7 +49,7 @@ public class DebateDataManager : MonoBehaviour
     public List<string> suitableForOpening;
     
     public enum DebateState { Idle, WaitingForTopic, WaitingForJudge, WaitingForOpponent, DebateEnded }
-    
+
     void Awake(){
         if(Instance != null && Instance != this){
             Destroy(gameObject);

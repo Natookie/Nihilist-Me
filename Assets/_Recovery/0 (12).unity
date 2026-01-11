@@ -857,7 +857,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 159.99998, y: 94.24945}
+  m_AnchoredPosition: {x: 159.99998, y: 94.02249}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3519899
@@ -19094,7 +19094,7 @@ MonoBehaviour:
     rid: 3273344437974990912
   m_ShadowCastingSource: 2
   m_ShadowMesh:
-    m_Mesh: {fileID: 934885432}
+    m_Mesh: {fileID: 1345746255}
     m_LocalBounds:
       m_Center: {x: 0, y: 0, z: 0}
       m_Extent: {x: 0.47000122, y: 1.144989, z: 0}
@@ -25176,7 +25176,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 0
+        Raw: 264.54166
         Type: 0
       Y:
         Raw: 0
@@ -27764,7 +27764,7 @@ Transform:
   m_GameObject: {fileID: 243541852}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 162.5, y: -294.7802, z: 0}
+  m_LocalPosition: {x: 162.5, y: -293.7934, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -45450,7 +45450,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 162.5, y: 97.28021}
+  m_AnchoredPosition: {x: 162.5, y: 96.293396}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &399270824
@@ -51092,7 +51092,7 @@ MonoBehaviour:
         Raw: 0
         Type: 0
       Y:
-        Raw: 492.49
+        Raw: 497.05
         Type: 0
       Z:
         Raw: 0
@@ -52501,7 +52501,7 @@ Transform:
   m_GameObject: {fileID: 458797989}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -825, y: 404.7802, z: 0}
+  m_LocalPosition: {x: -825, y: 403.7934, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -53765,7 +53765,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 162.5, y: 97.28021}
+  m_AnchoredPosition: {x: 162.5, y: 96.293396}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &465498703
@@ -54985,7 +54985,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 472292933}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 25, y: 227.87144, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -55172,7 +55172,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 1}
+    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 0}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -55188,7 +55188,7 @@ MonoBehaviour:
       FillAngle: 90
       Enabled: 0
     Gradient:
-      Color: {r: 1, g: 1, b: 1, a: 0}
+      Color: {r: 1, g: 1, b: 1, a: 1}
       Center:
         X:
           Raw: 0
@@ -55198,7 +55198,7 @@ MonoBehaviour:
           Type: 1
       Radius:
         X:
-          Raw: 0
+          Raw: 0.5
           Type: 1
         Y:
           Raw: 0.5
@@ -56275,7 +56275,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 0
+        Raw: 330.67706
         Type: 0
       Y:
         Raw: 0
@@ -89740,7 +89740,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 1}
+    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 0}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -89756,7 +89756,7 @@ MonoBehaviour:
       FillAngle: 90
       Enabled: 0
     Gradient:
-      Color: {r: 1, g: 1, b: 1, a: 0}
+      Color: {r: 1, g: 1, b: 1, a: 1}
       Center:
         X:
           Raw: 0
@@ -89766,7 +89766,7 @@ MonoBehaviour:
           Type: 1
       Radius:
         X:
-          Raw: 0
+          Raw: 0.5
           Type: 1
         Y:
           Raw: 0.5
@@ -112470,184 +112470,6 @@ MonoBehaviour:
   swingAngle: 2.5
   swingSpeed: 1.6
   phaseOffset: 0
---- !u!43 &934885432
-Mesh:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 12
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 0
-    topology: 0
-    baseVertex: 0
-    firstVertex: 0
-    vertexCount: 0
-    localAABB:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexFormat: 0
-  m_IndexBuffer: 
-  m_VertexData:
-    serializedVersion: 3
-    m_VertexCount: 0
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 0
-    _typelessdata: 
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_MeshUsageFlags: 0
-  m_CookingOptions: 30
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  'm_MeshMetrics[0]': 1
-  'm_MeshMetrics[1]': 1
-  m_MeshOptimizationFlags: 1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
-  m_MeshLodInfo:
-    serializedVersion: 2
-    m_LodSelectionCurve:
-      serializedVersion: 1
-      m_LodSlope: 0
-      m_LodBias: 0
-    m_NumLevels: 1
-    m_SubMeshes:
-    - serializedVersion: 2
-      m_Levels:
-      - serializedVersion: 1
-        m_IndexStart: 0
-        m_IndexCount: 0
 --- !u!1 &937131841
 GameObject:
   m_ObjectHideFlags: 0
@@ -135751,7 +135573,7 @@ Transform:
   m_GameObject: {fileID: 1103321225}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -270, y: 96.78021, z: 0}
+  m_LocalPosition: {x: -270, y: 95.793396, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -157490,7 +157312,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 1}
+    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 0}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -157506,7 +157328,7 @@ MonoBehaviour:
       FillAngle: 90
       Enabled: 0
     Gradient:
-      Color: {r: 1, g: 1, b: 1, a: 0}
+      Color: {r: 1, g: 1, b: 1, a: 1}
       Center:
         X:
           Raw: 0
@@ -157516,7 +157338,7 @@ MonoBehaviour:
           Type: 1
       Radius:
         X:
-          Raw: 0
+          Raw: 0.5
           Type: 1
         Y:
           Raw: 0.5
@@ -158361,7 +158183,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.13052616, y: -0, z: -0, w: 0.9914449}
   m_LocalPosition: {x: 2.4, y: 2.5711808, z: -6.5340743}
-  m_LocalScale: {x: 0.0006742934, y: 0.0006742934, z: 0.0006742934}
+  m_LocalScale: {x: 0.00067552837, y: 0.00067552837, z: 0.00067552837}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1876264697}
@@ -158424,7 +158246,7 @@ MonoBehaviour:
         Raw: 1920
         Type: 0
       Y:
-        Raw: 1079.5604
+        Raw: 1077.5868
         Type: 0
       Z:
         Raw: 0
@@ -164719,6 +164541,184 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9117b6d975111c47b064a4373cc67ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Nova::Nova.UIBlockActivator
+--- !u!43 &1345746255
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 12
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 0
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 0
+    localAABB:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 0
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 0
+    _typelessdata: 
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_MeshUsageFlags: 0
+  m_CookingOptions: 30
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  'm_MeshMetrics[0]': 1
+  'm_MeshMetrics[1]': 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
+  m_MeshLodInfo:
+    serializedVersion: 2
+    m_LodSelectionCurve:
+      serializedVersion: 1
+      m_LodSlope: 0
+      m_LodBias: 0
+    m_NumLevels: 1
+    m_SubMeshes:
+    - serializedVersion: 2
+      m_Levels:
+      - serializedVersion: 1
+        m_IndexStart: 0
+        m_IndexCount: 0
 --- !u!1 &1347799991
 GameObject:
   m_ObjectHideFlags: 0
@@ -174963,7 +174963,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 1}
+    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 0}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -174979,7 +174979,7 @@ MonoBehaviour:
       FillAngle: 90
       Enabled: 0
     Gradient:
-      Color: {r: 1, g: 1, b: 1, a: 0}
+      Color: {r: 1, g: 1, b: 1, a: 1}
       Center:
         X:
           Raw: 0
@@ -174989,7 +174989,7 @@ MonoBehaviour:
           Type: 1
       Radius:
         X:
-          Raw: 0
+          Raw: 0.5
           Type: 1
         Y:
           Raw: 0.5
@@ -176423,7 +176423,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 0
+        Raw: 66.135414
         Type: 0
       Y:
         Raw: 0
@@ -210833,7 +210833,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 0
+        Raw: 198.40625
         Type: 0
       Y:
         Raw: 0
@@ -229222,7 +229222,7 @@ MonoBehaviour:
     ReceiveShadows: 1
   PreviewSize: {x: 1, y: 1, z: 0}
   visuals:
-    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 1}
+    Color: {r: 0.08877714, g: 0.09391688, b: 0.0990566, a: 0}
     CornerRadius:
       Raw: 0
       Type: 0
@@ -229238,7 +229238,7 @@ MonoBehaviour:
       FillAngle: 90
       Enabled: 0
     Gradient:
-      Color: {r: 1, g: 1, b: 1, a: 0}
+      Color: {r: 1, g: 1, b: 1, a: 1}
       Center:
         X:
           Raw: 0
@@ -229248,7 +229248,7 @@ MonoBehaviour:
           Type: 1
       Radius:
         X:
-          Raw: 0
+          Raw: 0.5
           Type: 1
         Y:
           Raw: 0.5
@@ -235097,7 +235097,7 @@ MonoBehaviour:
     Image:
       Adjustment:
         CenterUV: {x: 0, y: -0.00000059604645}
-        UVScale: {x: 0.99999976, y: 0.99999976}
+        UVScale: {x: 0.99908555, y: 0.99999976}
         PixelsPerUnitMultiplier: 1
         scaleMode: 0
       Mode: 0
@@ -239050,30 +239050,23 @@ MonoBehaviour:
   - {fileID: 1837157430}
   - {fileID: 1423921322}
   moveSpeed: 300
-  fadeEnterSpeed: 1
+  fadeEnterSpeed: 2
   fadeExitSpeed: 5
   messageDelay: 1.5
-  SCALE_MIN: 0.5
-  ALPHA_MIN: 0.05
   dialogue:
-  - OMG did u see that post?
-  - he was PEEKING at girls
-  - what a disgusting pervert
-  - someone should report him to the school
-  - I found his insta @beeze_cooda
-  - let's all flood his DMs
-  - teach him a lesson he won't forget
-  - hope he gets expelled
-  - people like him belong in jail
-  - wanna make a hate page about him?
-  - I already screenshotted everything
-  - this is going viral for sure
-  - his life is over after this
-  - serves him right for being a creep
-  - we should find his parents' contacts too
-  leftBubbleColor: {r: 0.09019608, g: 0.09411765, b: 0.09803922, a: 1}
-  rightBubbleColor: {r: 0.15787557, g: 0.11681203, b: 0.1981132, a: 1}
-  leftTextColor: {r: 1, g: 1, b: 1, a: 1}
+  - Hey
+  - heyy
+  - yayaya, wyd
+  - eating
+  - oh really?
+  - yeah, just finished work
+  - cool! wanna hang out?
+  - sure, where at?
+  - how about the cafe?
+  - sounds good!
+  leftBubbleColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+  rightBubbleColor: {r: 0.2, g: 0.5, b: 1, a: 1}
+  leftTextColor: {r: 0, g: 0, b: 0, a: 1}
   rightTextColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1906974335
 GameObject:
@@ -247562,7 +247555,7 @@ Transform:
   m_GameObject: {fileID: 1983784145}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -462.5, y: -140.21979, z: 0}
+  m_LocalPosition: {x: -462.5, y: -141.2066, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -268281,7 +268274,7 @@ MonoBehaviour:
         Type: 0
     Position:
       X:
-        Raw: 0
+        Raw: 132.27083
         Type: 0
       Y:
         Raw: 0

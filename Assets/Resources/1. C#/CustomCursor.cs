@@ -38,7 +38,7 @@ public class CustomCursor : MonoBehaviour
 
     private Transform lastTarget;
     bool isOnObj, isTweening, isReturning, pendingSnap;
-    bool _allowMovement = true;
+    public bool _allowMovement = true;
     bool isRepositioning = false;
     private float hoverTimer, originalZ;
     private Color currentTargetColor = Color.white;
@@ -357,7 +357,7 @@ public class CustomCursor : MonoBehaviour
             Vector3 world = thisCam.ScreenToWorldPoint(mouse);
             world.z = originalZ + CURSOR_Z_OFFSET;
 
-            StartCoroutine(SmoothReposition(world, 0.15f));
+            if(this.gameObject.activeSelf) StartCoroutine(SmoothReposition(world, 0.15f));
         }
     }
     IEnumerator SmoothReposition(Vector3 targetPosition, float duration){

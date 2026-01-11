@@ -29,7 +29,7 @@ public class SceneChangeManager : MonoBehaviour
 
     public void ChangeToMenu()
     {
-        SceneManager.LoadScene("Menu Scene");
+        SceneManager.LoadScene("Main Menu Scene");
     }
 
     public void ChangeToGame()

@@ -227,7 +227,6 @@ public class CamFoll : MonoBehaviour
         float startFOV = vcam.m_Lens.FieldOfView;
         float endFOV = _targetFOV;
 
-        Debug.Log("return");
         AudioManager.Instance.EnableChannel(AudioChannel.Music, true);
         AudioManager.Instance.EnableChannel(AudioChannel.Ambience, true);
 
@@ -270,7 +269,7 @@ public class CamFoll : MonoBehaviour
         vcam.m_Lens = lens;
 
         desktopScreen.SetActive(true);
-        Debug.Log($"[Desktop] Screen ENABLED (immediate) at {Time.time:F2}s");
+        //Debug.Log($"[Desktop] Screen ENABLED (immediate) at {Time.time:F2}s");
         UpdatePostProcessingPriority();
 
         AudioManager.Instance.EnableChannel(AudioChannel.Music, false);
@@ -289,7 +288,7 @@ public class CamFoll : MonoBehaviour
         _isZooming = false;
         _flickerFinished = true;
 
-        Debug.Log($"[Desktop] Fully READY (immediate) at {Time.time:F2}s");
+        //Debug.Log($"[Desktop] Fully READY (immediate) at {Time.time:F2}s");
     }
     #endregion
 

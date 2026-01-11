@@ -6,7 +6,7 @@ using TMPro;
 
 public class DesktopIconGestureHandler : MonoBehaviour
 {
-    private DesktopManager dm;
+    private DesktopDragSettings dm;
 
     private RectTransform floatingGroup;
     private Image floatingIcon;
@@ -43,9 +43,9 @@ public class DesktopIconGestureHandler : MonoBehaviour
     public ItemView IconView;
 
     void Start(){
-        dm = DesktopManager.Instance;
+        dm = DesktopDragSettings.Instance;
         if(dm == null){
-            Debug.LogError("DesktopManager not found in scene.");
+            Debug.LogError("Desktop Drag Setting not found in scene.");
             enabled = false;
             return;
         }
