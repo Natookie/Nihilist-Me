@@ -199,7 +199,12 @@ public class PauseManager : MonoBehaviour
     }
     
     public void ExitGame(){
-        AudioManager.Instance.ResetAllChannel();
+        Time.timeScale = 1f;
+        ClosePauseMenu();
+        StartCoroutine(ExitMenu(.5f));
+    }
+    IEnumerator ExitMenu(float delay){
+        yield return new WaitForSecondsRealtime(delay);
         SceneChangeManager.Instance.ChangeToMenu();
     }
     #endregion
