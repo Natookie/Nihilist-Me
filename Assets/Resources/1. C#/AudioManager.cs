@@ -44,6 +44,8 @@ public class AudioManager : MonoBehaviour
     }
 
     void Start(){
+        //LoadAudioSettings();
+
         sources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
         if(backgroundMusic != null){
             if(musicGroup != null) backgroundMusic.outputAudioMixerGroup = musicGroup;
@@ -100,19 +102,18 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void ResetAllChannel()
-    {
-        // Clear all coroutine
+    public void ResetAllChannel(){
+        //Clear all coroutine
         musicFade = null;
         sfxFade = null;
         ambienceFade = null;
         uiFade = null;
-        // Set all channels to enable
+        //Set all channels to enable
         musicEnabled = true;
         sfxEnabled = true;
         ambienceEnabled = true;
         uiEnabled = true;
-        // Reset all mixer volumes
+        //Reset all mixer volumes
         mixer.SetFloat("MusicVolume", 1.0f);
         mixer.SetFloat("MasterVolume", 1.0f);
         mixer.SetFloat("SFXVolume", 1.0f);

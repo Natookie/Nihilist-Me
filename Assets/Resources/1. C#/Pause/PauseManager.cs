@@ -86,6 +86,8 @@ public class PauseManager : MonoBehaviour
     private Dictionary<PauseSelectionItem, Vector3> originalPositions = new Dictionary<PauseSelectionItem, Vector3>();
     private Dictionary<PauseSelectionItem, float> originalTextOffsets = new Dictionary<PauseSelectionItem, float>();
     
+    private bool isNavigating = false;
+
     void Awake(){
         Instance = this;
     }
@@ -190,10 +192,11 @@ public class PauseManager : MonoBehaviour
             cc._allowMovement = true;
         }
         if(!isPauseEnabled) return;
-        
+        Time.timeScale = 1f;
+
         if(cursorRoutine != null) StopCoroutine(cursorRoutine);
         if(scrambleRoutine != null) StopCoroutine(scrambleRoutine);
-        if(waveRoutine != null) StopCoroutine(waveRoutine);
+        if(waveRoutine != null) StopCoroutine(waveRoutine); 
         
         rootNode.gameObject.SetActive(false);
     }
@@ -219,17 +222,30 @@ public class PauseManager : MonoBehaviour
     void NavigateTo(int newIndex){
         if(newIndex == currentOptionIndex) return;
         
+        isNavigating = true;
+        if(currentSelectionRoutine != null) {
+            StopCoroutine(currentSelectionRoutine);
+            var oldItem = selectionItems[currentOptionIndex];
+            if(itemToPanelMap.ContainsKey(oldItem)) {
+                itemToPanelMap[oldItem].HideImmediate();
+            }
+        }
+
         if(currentHoverRoutine != null){
             StopCoroutine(currentHoverRoutine);
             currentHoverRoutine = null;
         }
         
-        if(currentSelectionRoutine != null) StopCoroutine(currentSelectionRoutine);
-        
         int oldIndex = currentOptionIndex;
         currentOptionIndex = newIndex;
         
         currentSelectionRoutine = StartCoroutine(AnimateSelectionParallel(oldIndex, newIndex));
+        StartCoroutine(ResetNavigationFlag());
+    }
+
+    IEnumerator ResetNavigationFlag(){
+        yield return new WaitForSecondsRealtime(.15f);
+        isNavigating = false;
     }
     
     void UpdateSelectionImmediate(){
@@ -243,7 +259,10 @@ public class PauseManager : MonoBehaviour
             else CompleteUnhover(item);
             
             if(item.targetPanel != null){
-                if(sideRoutines[i] != null) StopCoroutine(sideRoutines[i]);
+                if(sideRoutines[i] != null){
+                    StopCoroutine(sideRoutines[i]);
+                    if(!isSelected) item.targetPanel.HideImmediate();
+                }
                 sideRoutines[i] = StartCoroutine(AnimateSidePanel(item.targetPanel, isSelected));
             }
         }
@@ -252,6 +271,8 @@ public class PauseManager : MonoBehaviour
     
     #region GESTURE HANDLERS
     void OnItemPressed(PauseSelectionItem item){
+        if(isNavigating) return;
+
         int index = selectionItems.IndexOf(item);
         if(index >= 0) NavigateTo(index);
         
@@ -499,6 +520,12 @@ public class PauseManager : MonoBehaviour
     IEnumerator AnimateSelectionParallel(int deselectIndex, int selectIndex){
         PauseSelectionItem deselectItem = selectionItems[deselectIndex];
         PauseSelectionItem selectItem = selectionItems[selectIndex];
+
+        if(itemToPanelMap.ContainsKey(deselectItem)) itemToPanelMap[deselectItem].HideImmediate();
+        if(deselectIndex < sideRoutines.Length && sideRoutines[deselectIndex] != null){
+            StopCoroutine(sideRoutines[deselectIndex]);
+            sideRoutines[deselectIndex] = null;
+        }
         
         float elapsed = 0f;
         float selectDur = this.selectDuration;
@@ -564,7 +591,6 @@ public class PauseManager : MonoBehaviour
         CompleteUnhover(deselectItem);
         CompleteHover(selectItem);
         
-        if(itemToPanelMap.ContainsKey(deselectItem)) itemToPanelMap[deselectItem].Hide();
         if(itemToPanelMap.ContainsKey(selectItem)) itemToPanelMap[selectItem].Show();
     }
     
@@ -804,4 +830,12 @@ public class PauseSelectionPanel
     public UIBlock2D panelBlock;
     public virtual void Show(){ if(panelBlock != null) panelBlock.gameObject.SetActive(true); }
     public virtual void Hide(){ if(panelBlock != null) panelBlock.gameObject.SetActive(false); }
+    public virtual void HideImmediate(){ 
+        if(panelBlock != null) {
+            panelBlock.gameObject.SetActive(false);
+            var color = panelBlock.Color;
+            color.a = 0f;
+            panelBlock.Color = color;
+        }
+    }
 }

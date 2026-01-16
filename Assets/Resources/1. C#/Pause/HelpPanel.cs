@@ -18,39 +18,55 @@ public class HelpPanel : MonoBehaviour
     [SerializeField] private Color inactiveLineColor = Color.gray;
     
     string lyrics = 
-    "弱い者ばっか見るな\n" +
-    "欠点ばかりじゃねんだ\n" +
-    "日に日にAttractive\n" +
-    "負け犬じゃない we are\n\n" +
-    
-    "恐れない、土俵が違う、諦めない、step forward\n" +
-    "揃えない、ある物でなる可能\n" +
-    "覚えない、戦友が損するルール 悲観させたりはしない\n\n" +
-    
-    "お前はやりてえのか？本気なんか？\n" +
-    "困難を超えれるのかが鍵だ\n" +
-    "勢いだけを早まったって結果ないとダメだ\n" +
-    "つらぬく未来は方向次第で叶うからやりな\n" +
-    "張っときゃ行けるバリア\n" +
-    "誰でも持っているdrama、偏見から逃げなくてもいい。\n" +
-    "負けんな敵とみなすものに\n" +
-    "期待に応じ、自分を信じ\n" +
-    "羽ばたく人生に間違いなんてない\n\n" +
-    
-    "(I will be here)\n" +
-    "望みを背負い\n" +
-    "切り開く新しいステージへと\n" +
-    "誰かのために ためらいはしない\n" +
-    "平和な世界へ\n\n" +
-    
-    "弱い者ばっか見るな\n" +
-    "欠点ばかりじゃねんだ\n" +
-    "日に日にAttractive\n" +
-    "負け犬じゃない we are\n\n" +
-    
-    "恐れない、土俵が違う、諦めないstep forward\n" +
-    "揃えない、ある物でなる可能\n" +
-    "覚えない、戦友が損するルール 悲観させたりはしない";
+    "one prayer—one trigger—safety cl!cking off!\n"+
+    "cl!ck—clack—deliver—let the silence cough!\n"+
+    "boom—together—light the halos rough!\n"+
+    "my gospel’s gunpowder—sweet and tough!\n"+
+    "\n"+
+    "wires of empathy, silver, tight—\n"+
+    "all our pulses set to “right”\n"+
+    "if sorrow’s banned and smiles don’t shake\n"+
+    "who gets held when people break?\n"+
+    "keep your script of spotless grace—\n"+
+    "grief has edges, love needs sp+ce—\n"+
+    "if halos mean we never weep—\n"+
+    "bless my tears—\n"+
+    "let faith run deep\n"+
+    "one prayer—one trigger—heartbeat counting down!\n"+
+    "flash—bang—deliver—let the truth resound!\n"+
+    "sweet crust, hot lead—knock the idol down!\n"+
+    "if faith forgot to breathe—i’ll teach it how!\n"+
+    "gospel rock ’n’ roll!\n"+
+    "(high+voltage barrage!)\n"+
+    "\n"+
+    "if god wishes me to embrace death as an angel…\n"+
+    "then i would rather be born as human…\n"+
+    "with all the ugliness, transience, and suffering that entails!\n"+
+    "\n"+
+    "prayer never moved the mountain on command\n"+
+    "(it moves my feet to lift your shaking hands)\n"+
+    "not proof, not switch, not wishes coming true\n"+
+    "(it’s choosing you—and being chosen too)\n"+
+    "if hope is foolish, let me be that fool—\n"+
+    "a heart that bleeds is still a living proof\n"+
+    "\n"+
+    "vita cum dolore non est peccatum (it is no sin to live with pain)\n"+
+    "caritas vivorum nos connectit (the love of the living binds us together)\n"+
+    "\n"+
+    "one prayer—one trigger—light the thunder’s throat!\n"+
+    "(boom—together—write a truer note!)\n"+
+    "if law is love, then love must choose—devote!\n"+
+    "cut the wire—\n"+
+    "hold my hand—keep hope!\n"+
+    "quo modo angeli loquuntur? (how do angels speak?)\n"+
+    "quo modo angeli conectuntur? (how do angels connect?)\n"+
+    "quo modo angeli sustinent? (how do angels endure?)\n"+
+    "quo modo angeli exsistunt? (how do angels exist?)\n"+
+    "quo modo angeli loquuntur? (how do angels speak?)\n"+
+    "quo modo angeli conectuntur? (how do angels connect?)\n"+
+    "quo modo angeli sustinent? (how do angels endure?)\n"+
+    "quo modo angeli exsistunt— (how do angels exist—)\n"+
+    "quo modo angeli— (how do angels—)\n";
 
     private bool isBlock1Hovered = false;
     private bool isBlock2Hovered = false;

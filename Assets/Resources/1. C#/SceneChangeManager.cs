@@ -7,39 +7,44 @@ using UnityEngine.SceneManagement;
 public class SceneChangeManager : MonoBehaviour
 {
     static public SceneChangeManager Instance {private set; get;}
-    [SerializeField] private Computer computer; // Only needed when the current scene can change to desktop
+    [SerializeField] private Computer computer;
 
     static private bool openDesktopOnSceneChange = false;
 
-    private void Awake()
-    {
+    void Awake(){
         Instance = this;
     }
 
-    private IEnumerator Start()
-    {
-        if (openDesktopOnSceneChange)
-        {
+    IEnumerator Start(){
+        if(openDesktopOnSceneChange){
             Assert.IsNotNull(computer, "computer is missing");
             yield return new WaitUntil(() => computer.didStart);
             computer.InteractImmediately();
             openDesktopOnSceneChange = false;
         }
+        
+        yield return new WaitForEndOfFrame();
+        if(GameManager.Instance != null) GameManager.Instance.ResetReference();
     }
 
-    public void ChangeToMenu()
-    {
+    public void ChangeToMenu(){
         SceneManager.LoadScene("Main Menu Scene");
+        StartCoroutine(DelayedReset());
     }
 
-    public void ChangeToGame()
-    {
+    public void ChangeToGame(){
         SceneManager.LoadScene("Main Scene");
+        StartCoroutine(DelayedReset());
     }
 
-    public void ChangeToDesktop()
-    {
+    public void ChangeToDesktop(){
         openDesktopOnSceneChange = true;
         SceneManager.LoadScene("Main Scene");
+        StartCoroutine(DelayedReset());
+    }
+
+    IEnumerator DelayedReset(){
+        yield return new WaitForSeconds(.1f);
+        if(GameManager.Instance != null) GameManager.Instance.ResetReference();
     }
 }

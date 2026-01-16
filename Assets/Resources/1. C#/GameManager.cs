@@ -36,14 +36,24 @@ public class GameManager : MonoBehaviour
     private PauseManager pauseManager;
 
     public int currRound = 1;
-    [HideInInspector] public bool isPaused;
+    public bool isPaused;
     [HideInInspector] public bool isAnyUiActive;
 
     public static GameManager Instance { get; private set; }
     void Awake(){
+        if(Instance != null && Instance != this){
+            Destroy(this.gameObject);
+            return;
+        }
+        
         Instance = this;
+        DontDestroyOnLoad(this.gameObject);
 
         if(pp != null) pp.profile.TryGet<DepthOfField>(out _dof);
+    }
+
+    void Start(){
+        ResetReference();
     }
 
     void Update(){
@@ -55,21 +65,33 @@ public class GameManager : MonoBehaviour
     }
 
     void HandlePause(){
-        if(pauseManager == null){
-            pauseManager = PauseManager.Instance;
-            Assert.IsNotNull(pauseManager, "Pause manager in this scene has no local instance");
+        if(pauseManager == null || pauseManager.gameObject == null){
+            pauseManager = FindFirstObjectByType<PauseManager>();
+            if(pauseManager == null) return;
         }
 
         if(!pauseManager.isPauseEnabled) return;
+        
         if(Input.GetKeyDown(pauseKey)){
+            if(cc == null) return;
+            
             bool isOnDesktop = cc.desktopScreen.activeSelf;
             if(!isOnDesktop){
                 isPaused = !isPaused;
                 Time.timeScale = isPaused ? 0f : 1f;
                 if(isPaused) pauseManager.OpenPauseMenu();
                 else pauseManager.ClosePauseMenu();
-            }else computer.Interact();
+            }else if(computer != null){
+                computer.Interact();
+            }
         }
+    }
+
+    public void ResetReference(){
+        cc = FindFirstObjectByType<CamFoll>();
+        computer = FindFirstObjectByType<Computer>();
+        pauseManager = null;
+        isPaused = false;
     }
 
     /*Not used anymore
